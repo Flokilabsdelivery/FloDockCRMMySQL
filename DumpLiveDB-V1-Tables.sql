@@ -1,0 +1,3142 @@
+-- MySQL dump 10.13  Distrib 8.0.28, for Win64 (x86_64)
+--
+-- Host: 10.10.14.83    Database: liveDb
+-- ------------------------------------------------------
+-- Server version	8.0.34-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `ACCESSABLE_PAGES`
+--
+
+DROP TABLE IF EXISTS `ACCESSABLE_PAGES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ACCESSABLE_PAGES` (
+  `PAGE_ID` int NOT NULL AUTO_INCREMENT,
+  `PAGE_NAME` varchar(45) NOT NULL,
+  `PAGE_VALUE` varchar(100) NOT NULL,
+  PRIMARY KEY (`PAGE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=488 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Table structure for table `AISCORE_TRANSPORT_SETTING`
+--
+
+DROP TABLE IF EXISTS `AISCORE_TRANSPORT_SETTING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `AISCORE_TRANSPORT_SETTING` (
+  `AISCORE_TRANSPORT_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_NAME` varchar(45) DEFAULT NULL,
+  `TRANSPORT` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `AISCORE` tinyint(1) unsigned zerofill DEFAULT NULL,
+  `BUSINESS_ID` int DEFAULT NULL,
+  PRIMARY KEY (`AISCORE_TRANSPORT_ID`),
+  UNIQUE KEY `AISCORE_TRANSPORT_ID_UNIQUE` (`AISCORE_TRANSPORT_ID`),
+  KEY `BUSINESS_ID_idx` (`BUSINESS_ID`),
+  CONSTRAINT `BUSINESS_ID` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `API_SECURITY`
+--
+
+DROP TABLE IF EXISTS `API_SECURITY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `API_SECURITY` (
+  `SECURITY_ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `API_KEY` varchar(600) NOT NULL,
+  `EXPIRY_DATE` datetime NOT NULL,
+  `CREATION_DATE` datetime NOT NULL,
+  `LAST_MODIFIED_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_EXPIRED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SECURITY_ID`),
+  UNIQUE KEY `KEY_UNIQUE` (`API_KEY`),
+  KEY `fk_API_SECURITY_USER_ID_1_idx` (`USER_ID`),
+  CONSTRAINT `fk_API_SECURITY_USER_ID_1` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `APP_USER`
+--
+
+DROP TABLE IF EXISTS `APP_USER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `APP_USER` (
+  `USER_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `MODIFIED_DATE` datetime DEFAULT NULL,
+  `USER_EMAIL` varchar(45) DEFAULT NULL,
+  `USER_NAME` varchar(45) NOT NULL,
+  `USER_PHONE` varchar(45) DEFAULT NULL,
+  `USER_TYPE` varchar(45) DEFAULT NULL,
+  `PASSWORD` varchar(100) NOT NULL,
+  `PROVIDER_ID` int NOT NULL DEFAULT '1',
+  `IS_FIRST` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_ID`),
+  UNIQUE KEY `USER_NAME_UNIQUE` (`USER_NAME`),
+  KEY `provider_id` (`PROVIDER_ID`),
+  CONSTRAINT `provider_id` FOREIGN KEY (`PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BASE_META_DATA_MAP`
+--
+
+DROP TABLE IF EXISTS `BASE_META_DATA_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BASE_META_DATA_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `META_NAME` varchar(50) NOT NULL,
+  `REFERENCE_NAME` varchar(50) NOT NULL,
+  `REFERENCE_VALUE` varchar(50) DEFAULT NULL,
+  `FILE_TYPE` varchar(45) DEFAULT NULL,
+  `API_PROVIDER_ID` int NOT NULL,
+  `DATA_UPLOAD_TYPE` varchar(45) NOT NULL,
+  `DATA_FORMAT` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_BASE_META_DATA_MAP_1_idx` (`API_PROVIDER_ID`),
+  CONSTRAINT `fk_BASE_META_DATA_MAP_1` FOREIGN KEY (`API_PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=361 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `BASE_SERVICE_DETAIL`
+--
+
+DROP TABLE IF EXISTS `BASE_SERVICE_DETAIL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BASE_SERVICE_DETAIL` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_URL` varchar(500) NOT NULL,
+  `API_PROVIDER_ID` int DEFAULT NULL,
+  `FILE_TYPE` varchar(45) DEFAULT NULL,
+  `DOMAIN` varchar(255) DEFAULT NULL,
+  `DATE` datetime DEFAULT NULL,
+  `IS_STORE_ID_REQUIRED` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_BASE_SERVICE_DETAIL_1_idx` (`API_PROVIDER_ID`),
+  CONSTRAINT `fk_BASE_SERVICE_DETAIL_1` FOREIGN KEY (`API_PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BIZ_STOREID_MAP`
+--
+
+DROP TABLE IF EXISTS `BIZ_STOREID_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BIZ_STOREID_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_DETAIL_ID` int DEFAULT NULL,
+  `STORE_ID` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  UNIQUE KEY `BIZ_STOREID_UNIQUE` (`BUSINESS_DETAIL_ID`,`STORE_ID`),
+  CONSTRAINT `FK_businessidmap` FOREIGN KEY (`BUSINESS_DETAIL_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_AGGREGATIONS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_AGGREGATIONS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_AGGREGATIONS` (
+  `BUSINESS_AGGREGATION_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_TYPE` varchar(45) NOT NULL,
+  `AGGREGATION_COLUMN_NAME` varchar(45) NOT NULL,
+  `AGGREGATION_TYPE` varchar(45) NOT NULL,
+  PRIMARY KEY (`BUSINESS_AGGREGATION_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_API_PROVIDER_SETTING`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_API_PROVIDER_SETTING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_API_PROVIDER_SETTING` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `SETTING_NAME` varchar(45) NOT NULL,
+  `TYPE` varchar(45) DEFAULT NULL,
+  `VALUE` varchar(45) NOT NULL,
+  `API_PROVIDER_ID` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_api_provider_id_idx` (`API_PROVIDER_ID`),
+  CONSTRAINT `fk_api_provider_id` FOREIGN KEY (`API_PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_DETAILS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_DETAILS` (
+  `BUSINESS_DETAIL_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_NAME` varchar(45) NOT NULL,
+  `LOGO_URL` varchar(300) DEFAULT NULL,
+  `MODEL_ID` int NOT NULL,
+  `API_PROVIDER_ID` int DEFAULT NULL,
+  PRIMARY KEY (`BUSINESS_DETAIL_ID`),
+  KEY `fk_business_details_model_id` (`MODEL_ID`),
+  KEY `fk_api_provider_idx` (`API_PROVIDER_ID`),
+  CONSTRAINT `fk_api_provider` FOREIGN KEY (`API_PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`),
+  CONSTRAINT `fk_business_details_model_id` FOREIGN KEY (`MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_HIERARCHY`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_HIERARCHY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_HIERARCHY` (
+  `BUSINESS_HIERARCHY_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_NAME` varchar(45) DEFAULT NULL,
+  `PARENT_BUSINESS_ID` int DEFAULT NULL,
+  `RESOURCE_ID` int DEFAULT NULL,
+  `BUSINESS_ID` int DEFAULT NULL,
+  `TOP_MOSTED` tinyint DEFAULT '0',
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`BUSINESS_HIERARCHY_ID`),
+  KEY `business_details_fk_idx` (`BUSINESS_ID`),
+  KEY `resource_fk_idx` (`RESOURCE_ID`),
+  KEY `parent_business_hierarchy_fk_idx` (`PARENT_BUSINESS_ID`),
+  CONSTRAINT `business_details_fk` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `parent_business_hierarchy_fk` FOREIGN KEY (`PARENT_BUSINESS_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `resource_id_fk` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `RESOURCE` (`RESOURCE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_LABELS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_LABELS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_LABELS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `LABEL_ID` int NOT NULL,
+  `BUSINESS_LABEL_VALUE` varchar(45) NOT NULL,
+  `MODEL_ID` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_business_model_label_idx` (`LABEL_ID`),
+  KEY `fk_model_id_idx` (`MODEL_ID`),
+  CONSTRAINT `fk_business_model_label` FOREIGN KEY (`LABEL_ID`) REFERENCES `BUSINESS_MODEL_LABELS` (`ID`),
+  CONSTRAINT `fk_model_id` FOREIGN KEY (`MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_LIST_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_LIST_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_LIST_MAP` (
+  `LIST_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `LIST_ID` int NOT NULL,
+  `BUSINESS_DATA_TYPE` varchar(20) NOT NULL COMMENT '1) CUSTOMER DETAILS\n2) TRANSACTION DETAILS',
+  `BUSINESS_DETAILS_ID` int NOT NULL,
+  PRIMARY KEY (`LIST_MAP_ID`),
+  KEY `fk_BUSINESS_LIST_MAP_1_idx` (`BUSINESS_DETAILS_ID`),
+  KEY `fk_BUSINESS_LIST_MAP_2_idx` (`LIST_ID`),
+  CONSTRAINT `fk_BUSINESS_LIST_MAP_1` FOREIGN KEY (`BUSINESS_DETAILS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_BUSINESS_LIST_MAP_2` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_LIST_RELATION`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_LIST_RELATION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_LIST_RELATION` (
+  `RELATION_ID` int NOT NULL AUTO_INCREMENT,
+  `FROM_COLLECTION_NAME` varchar(450) NOT NULL,
+  `TO_COLLECTION_NAME` varchar(450) NOT NULL,
+  `PRIMARY_KEY_FIELD_NAME` varchar(45) NOT NULL,
+  `FOREIGN_KEY_FIELD_NAME` varchar(45) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`RELATION_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MEETING_CONFIG`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MEETING_CONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MEETING_CONFIG` (
+  `BUSINESS_MEETING_CONFIG_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_DETAIL_ID` int DEFAULT NULL,
+  `MEETING_CONFIG_FROM` varchar(200) DEFAULT NULL,
+  `APPLICATION_NAME` varchar(200) DEFAULT NULL,
+  `CLIENT_ID` varchar(300) DEFAULT NULL,
+  `OBJECT_ID` varchar(300) DEFAULT NULL,
+  `TENANT_ID` varchar(300) DEFAULT NULL,
+  `CLIENT_SECRET_ID` varchar(300) DEFAULT NULL,
+  `REDIRECT_URI` varchar(300) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`BUSINESS_MEETING_CONFIG_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_META_DATA_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_META_DATA_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_META_DATA_MAP` (
+  `MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_LIST_MAP_ID` int NOT NULL,
+  `BUSINESS_REF_NAME` varchar(45) NOT NULL,
+  `BUSINESS_REF_VALUE` varchar(45) DEFAULT NULL,
+  `META_ID` int NOT NULL,
+  `DATA_UPLOAD_TYPE` varchar(10) DEFAULT NULL COMMENT 'FILE, SERVICE',
+  PRIMARY KEY (`MAP_ID`),
+  UNIQUE KEY `business_upload_type_meta_key` (`BUSINESS_LIST_MAP_ID`,`META_ID`,`DATA_UPLOAD_TYPE`),
+  KEY `fk_BUSINESS_META_DATA_MAP_1_idx` (`BUSINESS_LIST_MAP_ID`),
+  KEY `fk_BUSINESS_META_DATA_MAP_2_idx` (`META_ID`),
+  CONSTRAINT `fk_BUSINESS_META_DATA_MAP_1` FOREIGN KEY (`BUSINESS_LIST_MAP_ID`) REFERENCES `BUSINESS_LIST_MAP` (`LIST_MAP_ID`),
+  CONSTRAINT `fk_BUSINESS_META_DATA_MAP_2` FOREIGN KEY (`META_ID`) REFERENCES `SUB_FILE_META_DATA` (`META_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2193 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL` (
+  `MODEL_ID` int NOT NULL AUTO_INCREMENT,
+  `MODEL_NAME` varchar(55) NOT NULL,
+  PRIMARY KEY (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_COLUMN`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_COLUMN`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_COLUMN` (
+  `MODEL_COLUMN_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_MODEL_ID` int NOT NULL,
+  `BUSINESS_TYPE` varchar(45) NOT NULL,
+  `COLUMN_NAME` varchar(45) NOT NULL,
+  `COLUMN_POSITION` int NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `DEFAULT_DATE_FORMAT` varchar(45) DEFAULT NULL,
+  `PROVIDER_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_USER_FIELD` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`MODEL_COLUMN_ID`),
+  KEY `fk_BUSINESS_MODEL_COLUMN_MODEL_ID_idx` (`BUSINESS_MODEL_ID`),
+  KEY `fk_BUSINESS_MODEL_COLUMN_COLUMN_TYPE_ID_idx` (`COLUMN_TYPE_ID`),
+  KEY `fk_BUSINESS_MODEL_COLUMN_PROVIDER_ID_idx` (`PROVIDER_ID`),
+  CONSTRAINT `fk_BUSINESS_MODEL_COLUMN_COLUMN_TYPE_ID` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`),
+  CONSTRAINT `fk_BUSINESS_MODEL_COLUMN_MODEL_ID` FOREIGN KEY (`BUSINESS_MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`),
+  CONSTRAINT `fk_BUSINESS_MODEL_PROVIDER_ID` FOREIGN KEY (`PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=540 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_COLUMN_FOR_INNER_DATA`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_COLUMN_FOR_INNER_DATA`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_COLUMN_FOR_INNER_DATA` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_MODEL_COLUMN_ID` int NOT NULL,
+  `COLUMN_NAME` varchar(50) NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `DEFAULT_DATE_FORMAT` varchar(45) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  KEY `business_model_column_type_dx_idx` (`COLUMN_TYPE_ID`),
+  KEY `business_model_column_idx_idx` (`ID`),
+  KEY `business_model_column_idx_idx1` (`BUSINESS_MODEL_COLUMN_ID`),
+  CONSTRAINT `business_model_column_idx` FOREIGN KEY (`BUSINESS_MODEL_COLUMN_ID`) REFERENCES `BUSINESS_MODEL_COLUMN` (`MODEL_COLUMN_ID`),
+  CONSTRAINT `business_model_column_type_dx` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_COLUMN_POSITION_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_COLUMN_POSITION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_COLUMN_POSITION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_MODEL_COLUMN_ID` int NOT NULL,
+  `PAGE_ID` int NOT NULL,
+  `COLUMN_POSITON` int NOT NULL,
+  `ALIAS` varchar(45) DEFAULT NULL,
+  `SECTION` int DEFAULT NULL,
+  `LINE` int DEFAULT NULL,
+  `POSITION` int DEFAULT NULL,
+  `SYSTEM_REQUIRED_FIELDS` tinyint NOT NULL DEFAULT '0',
+  KEY `FK_BUSINESS_MODEL_COLUMN_idx` (`BUSINESS_MODEL_COLUMN_ID`),
+  KEY `FK_SECTION_idx` (`SECTION`),
+  KEY `ID` (`ID`),
+  CONSTRAINT `FK_BUSINESS_MODEL` FOREIGN KEY (`BUSINESS_MODEL_COLUMN_ID`) REFERENCES `BUSINESS_MODEL_COLUMN` (`MODEL_COLUMN_ID`),
+  CONSTRAINT `FK_SECTION_DETAIL` FOREIGN KEY (`SECTION`) REFERENCES `STAGE_DETAILS` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_COLUMN_bk_sprint9_poc`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_COLUMN_bk_sprint9_poc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_COLUMN_bk_sprint9_poc` (
+  `MODEL_COLUMN_ID` int NOT NULL DEFAULT '0',
+  `BUSINESS_MODEL_ID` int NOT NULL,
+  `BUSINESS_TYPE` varchar(45) NOT NULL,
+  `COLUMN_NAME` varchar(45) NOT NULL,
+  `COLUMN_POSITION` int NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `DEFAULT_DATE_FORMAT` varchar(45) DEFAULT NULL,
+  `PROVIDER_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_USER_FIELD` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_CONFIG`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_CONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_CONFIG` (
+  `MODEL_CONFIG_ID` int NOT NULL AUTO_INCREMENT,
+  `MODEL_ID` int NOT NULL,
+  `CONFIG_KEY` varchar(100) NOT NULL,
+  `CONFIG_VALUE` longtext NOT NULL,
+  `PROVIDER_ID` int NOT NULL DEFAULT '-1' COMMENT 'Provider Id is coming from Provider table primary key. If Provider id is -1 then it''s common for all providers if it as a value then it''s mapped to a provider respectively. ',
+  PRIMARY KEY (`MODEL_CONFIG_ID`),
+  UNIQUE KEY `composite_key_for_providerId_configkey` (`MODEL_ID`,`CONFIG_KEY`,`PROVIDER_ID`),
+  CONSTRAINT `fk_business_model_and_config_id` FOREIGN KEY (`MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=436 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_LABELS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_LABELS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_LABELS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `LABEL_KEY` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_SECTION_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SECTION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SECTION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_MODEL_ID` int NOT NULL,
+  `SECTION_ID` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  KEY `Business_model_fk_idx` (`BUSINESS_MODEL_ID`),
+  CONSTRAINT `Business_model_fk` FOREIGN KEY (`BUSINESS_MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `BUSINESS_MODEL_SELECT`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SELECT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SELECT` (
+  `FIELD_ID` int NOT NULL AUTO_INCREMENT,
+  `FIELD_NAME` varchar(45) DEFAULT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`FIELD_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `BUSINESS_MODEL_SELECT_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SELECT_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SELECT_MAP` (
+  `MODEL_SELECT_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `MODEL_COLUMN_ID` int NOT NULL,
+  `SELECT_ID` int NOT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`MODEL_SELECT_MAP_ID`),
+  UNIQUE KEY `UNIQUE_MODEL_COLUMN_ID` (`MODEL_COLUMN_ID`),
+  KEY `IDX_MODEL_COLUMN_ID` (`MODEL_COLUMN_ID`),
+  KEY `IDX_SELECT_ID` (`SELECT_ID`),
+  CONSTRAINT `FK_MODEL_COLUMN_ID` FOREIGN KEY (`MODEL_COLUMN_ID`) REFERENCES `BUSINESS_MODEL_COLUMN` (`MODEL_COLUMN_ID`),
+  CONSTRAINT `FK_SELECT_ID` FOREIGN KEY (`SELECT_ID`) REFERENCES `BUSINESS_MODEL_SELECT` (`FIELD_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_SELECT_OPTION`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SELECT_OPTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SELECT_OPTION` (
+  `OPTION_ID` int NOT NULL AUTO_INCREMENT,
+  `OPTION_NAME` varchar(45) DEFAULT NULL,
+  `FIELD_ID` int NOT NULL,
+  `POSITION` int DEFAULT NULL,
+  `EDIT_RESTRICTED` tinyint DEFAULT '0',
+  `DELETE_RESTRICTED` tinyint DEFAULT '0',
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`OPTION_ID`),
+  KEY `IDX_FIELD_ID` (`FIELD_ID`),
+  CONSTRAINT `FK_BUSINESS_MODEL_SELECT` FOREIGN KEY (`FIELD_ID`) REFERENCES `BUSINESS_MODEL_SELECT` (`FIELD_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_SURVEY_QUESTIONS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SURVEY_QUESTIONS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SURVEY_QUESTIONS` (
+  `BUSINESS_SURVEY_QUES_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_MODEL_ID` int NOT NULL,
+  `SURVEY_QUESTION` varchar(100) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `SURVEY_TYPE` varchar(100) NOT NULL,
+  PRIMARY KEY (`BUSINESS_SURVEY_QUES_ID`),
+  KEY `fk_BUSINESS_MODEL_SURVEY_QUESTIONS_MODEL_ID_idx` (`BUSINESS_MODEL_ID`),
+  CONSTRAINT `fk_BUSINESS_MODEL_SURVEY_QUESTIONS_MODEL_ID` FOREIGN KEY (`BUSINESS_MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_SYSTEM_DATA_SELECT_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_SYSTEM_DATA_SELECT_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_SYSTEM_DATA_SELECT_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SYSTEM_DATA_NAME` varchar(100) NOT NULL,
+  `SELECT_ID` int NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_TEMPLATE_CATEGORY_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_TEMPLATE_CATEGORY_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_TEMPLATE_CATEGORY_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `MODEL_ID` int NOT NULL,
+  `TEMPLATE_CATEGORY_ID` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_business_model_id_idx_idx` (`MODEL_ID`),
+  KEY `fk_template_category_id_idx_idx` (`TEMPLATE_CATEGORY_ID`),
+  CONSTRAINT `fk_business_model_id_idx` FOREIGN KEY (`MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`),
+  CONSTRAINT `fk_template_category_id_idx` FOREIGN KEY (`TEMPLATE_CATEGORY_ID`) REFERENCES `TEMPLATE_CATEGORIES` (`CATEGORY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=218 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_MODEL_TEMPLATE_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_MODEL_TEMPLATE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_MODEL_TEMPLATE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `MODEL_ID` int NOT NULL,
+  `TEMPLATE_ID` int NOT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `MODIFIED_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `fk_TEMPLATE_ID_idx` (`TEMPLATE_ID`),
+  KEY `fk_BUSINESS_MODEL_ID_idx` (`MODEL_ID`),
+  CONSTRAINT `fk_BUSINESS_MODEL_ID` FOREIGN KEY (`MODEL_ID`) REFERENCES `BUSINESS_MODEL` (`MODEL_ID`),
+  CONSTRAINT `fk_TEMPLATE_ID` FOREIGN KEY (`TEMPLATE_ID`) REFERENCES `TEMPLATE` (`TEMPLATE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_SECTION_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_SECTION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_SECTION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_DETAIL_ID` int NOT NULL,
+  `SECTION_ID` int NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  KEY `BUSINESS_MODEL_ID_FK1_idx` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `BUSINESS_MODEL_ID_FK1` FOREIGN KEY (`BUSINESS_DETAIL_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `BUSINESS_SERVICES_SUPPORT`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_SERVICES_SUPPORT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_SERVICES_SUPPORT` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_NAME` varchar(100) NOT NULL,
+  `BUSINESS_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  KEY `fk_BUSINESS_SERVICES_SUPPORT_1_idx` (`BUSINESS_ID`),
+  CONSTRAINT `fk_BUSINESS_SERVICES_SUPPORT_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_SERVICE_DETAILS`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_SERVICE_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_SERVICE_DETAILS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_ID` varchar(45) NOT NULL,
+  `SERVICE_CODE` varchar(45) DEFAULT NULL,
+  `CAT_ID` varchar(45) DEFAULT NULL,
+  `CAT_DESCRIPTION` varchar(45) DEFAULT NULL,
+  `SERVICE_PRICE` varchar(45) DEFAULT NULL,
+  `SERVICE_DESC` varchar(45) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_SERVICE_STAFF_DETAILS_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_SERVICE_STAFF_DETAILS_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_SERVICE_STAFF_DETAILS_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_ID` int NOT NULL,
+  `STAFF_ID` int NOT NULL,
+  `BUSINESS_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `fk_BUSINESS_ID_idx` (`BUSINESS_ID`),
+  KEY `fk_BUSINESS_STAFF_ID_idx` (`STAFF_ID`),
+  KEY `fk_BUSINESS_SERVICE_ID_idx` (`SERVICE_ID`),
+  CONSTRAINT `fk_BUSINESS_ID` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_BUSINESS_SERVICE_ID` FOREIGN KEY (`SERVICE_ID`) REFERENCES `BUSINESS_SERVICE_DETAILS` (`ID`),
+  CONSTRAINT `fk_BUSINESS_STAFF_ID` FOREIGN KEY (`STAFF_ID`) REFERENCES `STAFF_DETAILS` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_STORE_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_STORE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_STORE_MAP` (
+  `BUSINESS_STORE_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_ID` int NOT NULL,
+  `STORE_ID` int NOT NULL,
+  PRIMARY KEY (`BUSINESS_STORE_MAP_ID`),
+  KEY `fk_BUSINESS_STORE_MAP_1_idx` (`BUSINESS_ID`),
+  KEY `fk_BUSINESS_STORE_MAP_2_idx` (`STORE_ID`),
+  CONSTRAINT `fk_BUSINESS_STORE_MAP_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_BUSINESS_STORE_MAP_2` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `BUSINESS_USER_MAP`
+--
+
+DROP TABLE IF EXISTS `BUSINESS_USER_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `BUSINESS_USER_MAP` (
+  `BUSINESS_USER_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  PRIMARY KEY (`BUSINESS_USER_MAP_ID`),
+  KEY `fk_BUSINESS_USER_MAP_1_idx` (`BUSINESS_ID`),
+  KEY `fk_BUSINESS_USER_MAP_2_idx` (`USER_ID`),
+  CONSTRAINT `fk_BUSINESS_USER_MAP_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_BUSINESS_USER_MAP_2` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- Table structure for table `CAMPAIGN`
+--
+
+DROP TABLE IF EXISTS `CAMPAIGN`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CAMPAIGN` (
+  `CAMPAIGN_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `SCHEDULE_ID` int DEFAULT NULL,
+  `USER_ID` int DEFAULT NULL,
+  `RULE_ID` int DEFAULT NULL,
+  `LIST_ID` int DEFAULT NULL,
+  `TEMPLATE_ID` int DEFAULT NULL,
+  `CAMPAIGN_NAME` varchar(45) NOT NULL,
+  `STATE` int NOT NULL,
+  `FOLLOWUP_SCHEDULE_ID` int DEFAULT NULL,
+  `COMMUNICATION_TYPE` int DEFAULT NULL,
+  `COMMUNICATION_DATA_ID` int DEFAULT NULL,
+  `CAMPAIGN_TYPE` int NOT NULL DEFAULT '1',
+  `STOP_CAMPAIGN_RULE_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_STATIC` tinyint(1) NOT NULL DEFAULT '0',
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`CAMPAIGN_ID`),
+  KEY `FK_2r8alfb1du82g91nwta1rk06h` (`USER_ID`),
+  KEY `FK_od9425sqtb3j8muhpgfwftn3y` (`RULE_ID`),
+  KEY `FK_9shqq7lclx6k5094nq0sdlpsn` (`LIST_ID`),
+  KEY `FK_5uqds3pet9tdy4ydntgv9dal0` (`TEMPLATE_ID`),
+  KEY `FK_CAMPAIGN_SCHEDULAR_1_idx` (`SCHEDULE_ID`),
+  KEY `FK_nhxy07a1ui65y0q70nf3tdboa` (`FOLLOWUP_SCHEDULE_ID`),
+  KEY `fk_CAMPAIGN_SUB_META_DATA_idx` (`COMMUNICATION_DATA_ID`),
+  KEY `FK_MetaId_communicaationId_1_idx` (`COMMUNICATION_DATA_ID`),
+  KEY `BUSINESS_HIERARCHY_ID` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `CAMPAIGN_ibfk_1` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `FK_2r8alfb1du82g91nwta1rk06h` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `FK_5uqds3pet9tdy4ydntgv9dal0` FOREIGN KEY (`TEMPLATE_ID`) REFERENCES `TEMPLATE` (`TEMPLATE_ID`),
+  CONSTRAINT `FK_9shqq7lclx6k5094nq0sdlpsn` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `FK_CAMPAIGN_SCHEDULAR_1` FOREIGN KEY (`SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`),
+  CONSTRAINT `FK_MetaId_communicaationId_1` FOREIGN KEY (`COMMUNICATION_DATA_ID`) REFERENCES `SUB_FILE_META_DATA` (`META_ID`),
+  CONSTRAINT `FK_nhxy07a1ui65y0q70nf3tdboa` FOREIGN KEY (`FOLLOWUP_SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`),
+  CONSTRAINT `FK_od9425sqtb3j8muhpgfwftn3y` FOREIGN KEY (`RULE_ID`) REFERENCES `RULE_MASTER` (`RULE_MASTER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=654 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+
+
+--
+-- Table structure for table `CAMPAIGN_TEMPLATE_MAP`
+--
+
+DROP TABLE IF EXISTS `CAMPAIGN_TEMPLATE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CAMPAIGN_TEMPLATE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CAMPAIGN_ID` int DEFAULT NULL,
+  `TEMPLATE_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `forin_key1_idx` (`CAMPAIGN_ID`),
+  KEY `forin_key2_idx` (`TEMPLATE_ID`),
+  CONSTRAINT `forin_key1` FOREIGN KEY (`CAMPAIGN_ID`) REFERENCES `CAMPAIGN` (`CAMPAIGN_ID`),
+  CONSTRAINT `forin_key2` FOREIGN KEY (`TEMPLATE_ID`) REFERENCES `TEMPLATE` (`TEMPLATE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `CATEGORY`
+--
+
+DROP TABLE IF EXISTS `CATEGORY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CATEGORY` (
+  `CATEGORY_ID` int NOT NULL AUTO_INCREMENT,
+  `CATEGORY_NAME` varchar(200) NOT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`CATEGORY_ID`),
+  KEY `business_category_idx` (`STORE_ID`),
+  CONSTRAINT `BUSINESS_CATAGORY` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `CATEGORY_SUBCATEGORY_MAP`
+--
+
+DROP TABLE IF EXISTS `CATEGORY_SUBCATEGORY_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CATEGORY_SUBCATEGORY_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CATEGORY_ID` int NOT NULL,
+  `SUB_CATEGORY_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `catForiengkey_idx` (`CATEGORY_ID`),
+  KEY `subCatforiengkey_idx` (`SUB_CATEGORY_ID`),
+  CONSTRAINT `catForiengkey` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `CATEGORY` (`CATEGORY_ID`),
+  CONSTRAINT `subCatforiengkey` FOREIGN KEY (`SUB_CATEGORY_ID`) REFERENCES `SUB_CATEGORY` (`SUB_CATEGORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `COLUMN_CONDITION`
+--
+
+DROP TABLE IF EXISTS `COLUMN_CONDITION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COLUMN_CONDITION` (
+  `COLUMN_CONDITION_ID` int NOT NULL,
+  `COLUMN_CONDITION_NAME` varchar(45) NOT NULL,
+  `COLUMN_CONDITION_TYPE` varchar(45) NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `COLUMN_VALUE_TYPE` int NOT NULL DEFAULT '0' COMMENT '0 - Real value\n1 - calculate value',
+  PRIMARY KEY (`COLUMN_CONDITION_ID`),
+  KEY `FK_lvrql9666f4h0ep97ycyjkwss` (`COLUMN_TYPE_ID`),
+  CONSTRAINT `FK_lvrql9666f4h0ep97ycyjkwss` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `COLUMN_TYPE`
+--
+
+DROP TABLE IF EXISTS `COLUMN_TYPE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COLUMN_TYPE` (
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `COLUMN_TYPE_NAME` varchar(45) NOT NULL,
+  `COLUMN_TYPE_REGEX` varchar(250) NOT NULL,
+  `CREATION_DATE` datetime NOT NULL,
+  `DEFAULT_DATA_FORMAT` varchar(45) DEFAULT NULL,
+  `IS_AVAILABLE` tinyint NOT NULL DEFAULT '0',
+  `ALIAS` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`COLUMN_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `COMMUNICATION_PARAMETER`
+--
+
+DROP TABLE IF EXISTS `COMMUNICATION_PARAMETER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COMMUNICATION_PARAMETER` (
+  `PARAMETER_ID` int NOT NULL AUTO_INCREMENT,
+  `MAIL_SERVER_NAME` varchar(45) NOT NULL,
+  `PROPERTY_KEY` int NOT NULL,
+  `PROPERTY_NAME` varchar(45) NOT NULL,
+  `STATUS` tinyint(1) DEFAULT '1',
+  PRIMARY KEY (`PARAMETER_ID`),
+  KEY `fk_MAIL_SERVER_PARAMETER_1_idx` (`PROPERTY_KEY`),
+  CONSTRAINT `fk_COMMUNICATION_PARAMETER_1` FOREIGN KEY (`PROPERTY_KEY`) REFERENCES `COMMUNICATION_PROPERTIES` (`PROPERTY_KEY`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `COMMUNICATION_PROPERTIES`
+--
+
+DROP TABLE IF EXISTS `COMMUNICATION_PROPERTIES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COMMUNICATION_PROPERTIES` (
+  `PROPERTY_KEY` int NOT NULL AUTO_INCREMENT,
+  `PROPERTY_NAME` varchar(45) NOT NULL,
+  `PROPERTY_ORDER` int DEFAULT NULL,
+  `PROPERTY_STATUS` tinyint(1) DEFAULT '0',
+  `DISPLAY_NAME` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`PROPERTY_KEY`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `COMMUNICATION_SETTING`
+--
+
+DROP TABLE IF EXISTS `COMMUNICATION_SETTING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COMMUNICATION_SETTING` (
+  `COMM_SETTING_ID` int NOT NULL AUTO_INCREMENT,
+  `HOST_ADDRESS` varchar(200) DEFAULT NULL,
+  `PASSWORD` varchar(45) NOT NULL,
+  `PORT_NUMBER` int DEFAULT '0',
+  `USER_NAME` varchar(200) DEFAULT NULL,
+  `USER_ID` int NOT NULL,
+  `FROM_ADDRESS` varchar(45) NOT NULL,
+  `REPLY_TO` varchar(45) DEFAULT NULL,
+  `MAIL_SERVER_NAME` varchar(200) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `COMMUNICATION_TYPE` int NOT NULL COMMENT 'Type Of Communication(ex: Sms,Email etc)',
+  `ALLOWED_CHARACTER` varchar(45) DEFAULT NULL,
+  `CAPABILITY_TOKEN` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`COMM_SETTING_ID`),
+  KEY `FK_qxi9x4lc7iaayg8yywcnfeho4` (`USER_ID`),
+  CONSTRAINT `FK_qxi9x4lc7iaayg8yywcnfeho4` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `COMMUNICATION_STATUS`
+--
+
+DROP TABLE IF EXISTS `COMMUNICATION_STATUS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `COMMUNICATION_STATUS` (
+  `COM_STATUS_ID` int NOT NULL AUTO_INCREMENT,
+  `DELIEVERED` int DEFAULT NULL,
+  `FAILED_WHILE_SENT` int DEFAULT NULL,
+  `JOB_RUNTIME` datetime DEFAULT NULL,
+  `SENT` int DEFAULT NULL,
+  `UNSENT` int DEFAULT NULL,
+  `CAMPAIGN_ID` int NOT NULL,
+  PRIMARY KEY (`COM_STATUS_ID`),
+  KEY `FK_npq9ojpe6xgyisa7q40ov360v` (`CAMPAIGN_ID`),
+  CONSTRAINT `FK_npq9ojpe6xgyisa7q40ov360v` FOREIGN KEY (`CAMPAIGN_ID`) REFERENCES `CAMPAIGN` (`CAMPAIGN_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `CONTACT_ROLE`
+--
+
+DROP TABLE IF EXISTS `CONTACT_ROLE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `CONTACT_ROLE` (
+  `ROLE_ID` int NOT NULL AUTO_INCREMENT,
+  `ROLE` varchar(100) NOT NULL,
+  PRIMARY KEY (`ROLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `DATA_FILTER_MAP`
+--
+
+DROP TABLE IF EXISTS `DATA_FILTER_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `DATA_FILTER_MAP` (
+  `FILTER_ID` int NOT NULL AUTO_INCREMENT,
+  `ROLE_ID` int NOT NULL,
+  `DROPDOWN_ID` int NOT NULL,
+  `DATA_FILTER_CONDITION` varchar(45) NOT NULL,
+  `MAPPED_IDS` varchar(45) NOT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  `INDEX_S` int NOT NULL,
+  PRIMARY KEY (`FILTER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `DRIP_SCHEDULE_TEMPLATE`
+--
+
+DROP TABLE IF EXISTS `DRIP_SCHEDULE_TEMPLATE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `DRIP_SCHEDULE_TEMPLATE` (
+  `DRIP_ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(55) NOT NULL,
+  `CAMPAIGN_ID` int NOT NULL,
+  `TEMPLATE_ID` int NOT NULL,
+  `SCHEDULE_ID` int NOT NULL,
+  `FOLLOWUP_SCHEDULE_ID` int DEFAULT NULL,
+  `SCHEDULE_TYPE` int NOT NULL,
+  `SCHEDULE_VALUE` int NOT NULL,
+  `SEQUENCE_ID` int NOT NULL,
+  `STATUS` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `RULE_ID` int DEFAULT NULL,
+  PRIMARY KEY (`DRIP_ID`),
+  KEY `FK_drip_template_campaign_id` (`CAMPAIGN_ID`),
+  KEY `FK_drip_template_id` (`TEMPLATE_ID`),
+  KEY `FK_drip_template_schedular_id` (`SCHEDULE_ID`),
+  KEY `FK_drip_template_followup_schedular_id` (`FOLLOWUP_SCHEDULE_ID`),
+  KEY `fk_DSTRuleMaster` (`RULE_ID`),
+  CONSTRAINT `fk_ DSTRuleMaster` FOREIGN KEY (`RULE_ID`) REFERENCES `RULE_MASTER` (`RULE_MASTER_ID`),
+  CONSTRAINT `FK_drip_template_campaign_id` FOREIGN KEY (`CAMPAIGN_ID`) REFERENCES `CAMPAIGN` (`CAMPAIGN_ID`),
+  CONSTRAINT `FK_drip_template_followup_schedular_id` FOREIGN KEY (`FOLLOWUP_SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`),
+  CONSTRAINT `FK_drip_template_id` FOREIGN KEY (`TEMPLATE_ID`) REFERENCES `TEMPLATE` (`TEMPLATE_ID`),
+  CONSTRAINT `FK_drip_template_schedular_id` FOREIGN KEY (`SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `DYNAMIC_IMAGE_MASTER`
+--
+
+DROP TABLE IF EXISTS `DYNAMIC_IMAGE_MASTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `DYNAMIC_IMAGE_MASTER` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(150) NOT NULL,
+  `LIST_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  `IS_ACTIVE` tinyint(1) NOT NULL DEFAULT '1',
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_dimSubList` (`LIST_ID`),
+  KEY `fk_user_id_idx` (`USER_ID`),
+  KEY `fk_dimgmstr_BHeirarchy_idx` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `fk_dimgmstr_BHeirarchy` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `fk_dimSubList` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `DYNAMIC_REPORT`
+--
+
+DROP TABLE IF EXISTS `DYNAMIC_REPORT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `DYNAMIC_REPORT` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CHART_TYPE` int DEFAULT NULL,
+  `FILTER_ID` int DEFAULT NULL,
+  `BUSINESS_ID` int DEFAULT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  `IS_AVAILABLE` tinyint DEFAULT NULL,
+  `IS_DELETED` tinyint DEFAULT NULL,
+  `CHART_NAME` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `BUSINESS_DETAIL_FK_idx` (`BUSINESS_ID`),
+  KEY `BUSINESS_HIERARCHY_FK_idx` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `BUSINESS_DETAIL_DYN_REPFK` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `BUSINESS_HIERARCHY_DYN_REPFK` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `DYNAMIC_REPORT_DETAILS`
+--
+
+DROP TABLE IF EXISTS `DYNAMIC_REPORT_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `DYNAMIC_REPORT_DETAILS` (
+  `DYNAMIC_REPORT_DETAILS_ID` int NOT NULL AUTO_INCREMENT,
+  `DYNAMIC_REPORT_ID` int DEFAULT NULL,
+  `COLLECTION_NAME` varchar(100) DEFAULT NULL,
+  `PURPOSE` int DEFAULT NULL,
+  `TYPE` int DEFAULT NULL,
+  `METAID` varchar(45) DEFAULT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  `GROUPBY_LIST_ID` int DEFAULT NULL,
+  `AGGREGATION_LIST_ID` int DEFAULT NULL,
+  PRIMARY KEY (`DYNAMIC_REPORT_DETAILS_ID`),
+  KEY `sub_listdyn_report_fk_idx` (`COLLECTION_NAME`),
+  KEY `fk_DYNAMIC_REPORT_DETAILS_report_idx` (`DYNAMIC_REPORT_ID`),
+  CONSTRAINT `fk_DYNAMIC_REPORT_DETAILS_report` FOREIGN KEY (`DYNAMIC_REPORT_ID`) REFERENCES `DYNAMIC_REPORT` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=289 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `EMAIL_ADDITIONAL_PARAM`
+--
+
+DROP TABLE IF EXISTS `EMAIL_ADDITIONAL_PARAM`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `EMAIL_ADDITIONAL_PARAM` (
+  `PARAM_ID` int NOT NULL AUTO_INCREMENT,
+  `MAIL_SERVER_ID` int NOT NULL,
+  `PARAM_NAME` varchar(45) NOT NULL,
+  `STATUS` tinyint(1) NOT NULL,
+  PRIMARY KEY (`PARAM_ID`),
+  KEY `fk_EMAIL_ADDITIONAL_PARAM_1_idx` (`MAIL_SERVER_ID`),
+  CONSTRAINT `fk_EMAIL_ADDITIONAL_PARAM_1` FOREIGN KEY (`MAIL_SERVER_ID`) REFERENCES `MAIL_SERVER_DETAIL` (`MAIL_SERVER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `EMAIL_ADDITIONAL_VALUE`
+--
+
+DROP TABLE IF EXISTS `EMAIL_ADDITIONAL_VALUE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `EMAIL_ADDITIONAL_VALUE` (
+  `VALUE_ID` int NOT NULL AUTO_INCREMENT,
+  `COMM_SETTING_ID` int NOT NULL,
+  `PARAM_ID` int NOT NULL,
+  `PARAM_VALUE` varchar(150) DEFAULT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`VALUE_ID`),
+  UNIQUE KEY `VALUE_ID_UNIQUE` (`VALUE_ID`),
+  KEY `fk_EMAIL_ADDITIONAL_VALUE_1_idx` (`COMM_SETTING_ID`),
+  KEY `fk_EMAIL_ADDITIONAL_VALUE_2_idx` (`PARAM_ID`),
+  CONSTRAINT `fk_EMAIL_ADDITIONAL_VALUE_1` FOREIGN KEY (`COMM_SETTING_ID`) REFERENCES `COMMUNICATION_SETTING` (`COMM_SETTING_ID`),
+  CONSTRAINT `fk_EMAIL_ADDITIONAL_VALUE_2` FOREIGN KEY (`PARAM_ID`) REFERENCES `EMAIL_ADDITIONAL_PARAM` (`PARAM_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `EMAIL_HISTORY`
+--
+
+DROP TABLE IF EXISTS `EMAIL_HISTORY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `EMAIL_HISTORY` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `REFRENCE_TYPE` int DEFAULT NULL,
+  `REFRENCE_ID` varchar(45) DEFAULT NULL,
+  `RECIVED_BY` varchar(500) DEFAULT NULL,
+  `SENT_BY` varchar(200) DEFAULT NULL,
+  `SUBJECT` varchar(500) DEFAULT NULL,
+  `DATE` datetime DEFAULT NULL,
+  `MESSAGE` text,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1416 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `ENVIRONMENT_SETUP`
+--
+
+DROP TABLE IF EXISTS `ENVIRONMENT_SETUP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ENVIRONMENT_SETUP` (
+  `SETUP_ID` int NOT NULL AUTO_INCREMENT,
+  `KEY_NAME` varchar(45) DEFAULT NULL,
+  `KEY_VALUE` varchar(100) DEFAULT NULL,
+  `ISACTIVE` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`SETUP_ID`),
+  UNIQUE KEY `KEY_NAME_UNIQUE` (`KEY_NAME`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FILE_LOCATION_DETAIL`
+--
+
+DROP TABLE IF EXISTS `FILE_LOCATION_DETAIL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `FILE_LOCATION_DETAIL` (
+  `FILE_LOCATION_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `FILE_LOCATION` varchar(200) NOT NULL,
+  `FILE_NAME` varchar(100) NOT NULL,
+  `FILE_STATE` varchar(45) NOT NULL,
+  `FILE_TYPE` varchar(45) NOT NULL,
+  `REFERENCE_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  PRIMARY KEY (`FILE_LOCATION_ID`),
+  KEY `FK_ishaobmfe9y2hur11g98yx02m` (`USER_ID`),
+  CONSTRAINT `FK_ishaobmfe9y2hur11g98yx02m` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=286 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `JOB_REPEAT_ON`
+--
+
+DROP TABLE IF EXISTS `JOB_REPEAT_ON`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `JOB_REPEAT_ON` (
+  `JOB_REPEAT_ON_ID` int NOT NULL AUTO_INCREMENT,
+  `TIME_OF_DAY` time DEFAULT NULL,
+  `DAYS_OF_WEEK` varchar(20) DEFAULT NULL,
+  `DAY_OF_MONTH` int DEFAULT NULL,
+  `WEEK_OF_MONTH` int DEFAULT NULL,
+  `MONTH_OF_YEAR` int DEFAULT NULL,
+  PRIMARY KEY (`JOB_REPEAT_ON_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=959 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- Table structure for table `MAIL_SERVER_DETAIL`
+--
+
+DROP TABLE IF EXISTS `MAIL_SERVER_DETAIL`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MAIL_SERVER_DETAIL` (
+  `MAIL_SERVER_ID` int NOT NULL AUTO_INCREMENT,
+  `MAIL_SERVER_NAME` varchar(45) NOT NULL,
+  `COMMUNICATION_TYPE` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`MAIL_SERVER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `MASTER_MENU`
+--
+
+DROP TABLE IF EXISTS `MASTER_MENU`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MASTER_MENU` (
+  `MASTER_MENU_ID` int NOT NULL,
+  `MASTER_MENU_NAME` varchar(200) NOT NULL,
+  `MASTER_MENU_DESC` varchar(200) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  `IS_CRM` tinyint(1) DEFAULT '0',
+  `SUB_MENU_ID` int DEFAULT NULL,
+  PRIMARY KEY (`MASTER_MENU_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `MASTER_SETTING`
+--
+
+DROP TABLE IF EXISTS `MASTER_SETTING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MASTER_SETTING` (
+  `SETTING_ID` int NOT NULL AUTO_INCREMENT,
+  `SETTING_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`SETTING_ID`),
+  UNIQUE KEY `SETTING_NAME_UNIQUE` (`SETTING_NAME`)
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `MEETING_USER_CONFIG_DETAILS`
+--
+
+DROP TABLE IF EXISTS `MEETING_USER_CONFIG_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MEETING_USER_CONFIG_DETAILS` (
+  `MEETING_USER_CONFIG_DETAILS_ID` int NOT NULL AUTO_INCREMENT,
+  `TOKEN_TYPE` varchar(200) DEFAULT NULL,
+  `TOKEN_SCOPE` varchar(1000) DEFAULT NULL,
+  `TOKEN_EXPIRES_IN` int DEFAULT NULL,
+  `RESOURCE_ID` int DEFAULT NULL,
+  `EXT_EXPIRES_IN` varchar(200) DEFAULT NULL,
+  `EXPIRES_ON` varchar(200) DEFAULT NULL,
+  `NOT_BEFORE` varchar(200) DEFAULT NULL,
+  `ACCESS_TOKEN` varchar(3000) DEFAULT NULL,
+  `REFRESH_TOKEN` varchar(3000) DEFAULT NULL,
+  `USER_DISPLAYNAME` varchar(500) DEFAULT NULL,
+  `USER_JOBTITLE` varchar(300) DEFAULT NULL,
+  `USER_MAIL` varchar(300) DEFAULT NULL,
+  `USER_MOBILEPHONE` varchar(200) DEFAULT NULL,
+  `USER_PRINCIPAL_NAME` varchar(500) DEFAULT NULL,
+  `USER_MEETING_ID` varchar(1000) DEFAULT NULL,
+  `USER_GIVENNAME` varchar(200) DEFAULT NULL,
+  `USER_SURNAME` varchar(200) NOT NULL,
+  `MODIFIED_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`MEETING_USER_CONFIG_DETAILS_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `MENU`
+--
+
+DROP TABLE IF EXISTS `MENU`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `MENU` (
+  `MENU_ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(50) NOT NULL,
+  `ICON` varchar(45) DEFAULT NULL,
+  `LINK` varchar(150) NOT NULL,
+  `DESCRIPTION` varchar(300) DEFAULT NULL,
+  `IS_DELETED` tinyint unsigned DEFAULT '0',
+  `USAGE` varchar(45) DEFAULT NULL,
+  `PARENT_MENU_ID` int DEFAULT '0' COMMENT 'Specifies the parent menu''s id.',
+  `MENU_ORDER` int NOT NULL,
+  PRIMARY KEY (`MENU_ID`),
+  UNIQUE KEY `IDENTITY_UNIQUE_MENU` (`MENU_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PAGE_DETAILS`
+--
+
+DROP TABLE IF EXISTS `PAGE_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PAGE_DETAILS` (
+  `PAGE_DETAILS_ID` int NOT NULL AUTO_INCREMENT,
+  `TYPE` int NOT NULL,
+  `PAGE_ID` int NOT NULL,
+  `SUBLIST_ID` int NOT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`PAGE_DETAILS_ID`),
+  KEY `fk_PAGE_DETAILS_SUBLIST_idx` (`SUBLIST_ID`),
+  CONSTRAINT `fk_PAGE_DETAILS_SUBLIST` FOREIGN KEY (`SUBLIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PRODUCTS`
+--
+
+DROP TABLE IF EXISTS `PRODUCTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PRODUCTS` (
+  `PRODUCT_ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(200) NOT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `BAR_CODE` int DEFAULT '0',
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PRODUCT_ID`),
+  KEY `store_product_idx` (`STORE_ID`),
+  CONSTRAINT `store_product` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `PRODUCT_CATEGORY_MAP`
+--
+
+DROP TABLE IF EXISTS `PRODUCT_CATEGORY_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PRODUCT_CATEGORY_MAP` (
+  `PRODUCT_CATEGORY_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `CATEGORY_ID` int DEFAULT NULL,
+  `SUB_CATEGORY_ID` int DEFAULT NULL,
+  `PRODUCT_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PRODUCT_CATEGORY_MAP_ID`),
+  KEY `category_map_idx` (`CATEGORY_ID`),
+  KEY `sub_category_map_idx` (`SUB_CATEGORY_ID`),
+  KEY `product_map_idx` (`PRODUCT_ID`),
+  CONSTRAINT `category_map` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `CATEGORY` (`CATEGORY_ID`),
+  CONSTRAINT `product_category_map` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `PRODUCTS` (`PRODUCT_ID`),
+  CONSTRAINT `sub_category_map` FOREIGN KEY (`SUB_CATEGORY_ID`) REFERENCES `SUB_CATEGORY` (`SUB_CATEGORY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PRODUCT_TYPES`
+--
+
+DROP TABLE IF EXISTS `PRODUCT_TYPES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PRODUCT_TYPES` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `PRODUCT_TYPE` varchar(45) DEFAULT NULL,
+  `PRODUCT_PREFIX` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PRODUCT_VARIANTS`
+--
+
+DROP TABLE IF EXISTS `PRODUCT_VARIANTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PRODUCT_VARIANTS` (
+  `PRODUCT_VARIANT_ID` int NOT NULL AUTO_INCREMENT,
+  `VARIANT_NAME` varchar(200) NOT NULL,
+  `SKU` varchar(200) DEFAULT NULL,
+  `PRICE` double NOT NULL,
+  `PRODUCT_ID` int NOT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `AVAILABLE_QUANTITY` int DEFAULT '0',
+  `TOTAL_QUANTITY` int NOT NULL DEFAULT '0',
+  `TAX` double NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PRODUCT_VARIANT_ID`),
+  KEY `store_variant_idx` (`STORE_ID`),
+  KEY `variant_product_idx` (`PRODUCT_ID`),
+  CONSTRAINT `product_variant` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `PRODUCTS` (`PRODUCT_ID`),
+  CONSTRAINT `store_variant` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PRODUCT_VARIANT_DETAILS`
+--
+
+DROP TABLE IF EXISTS `PRODUCT_VARIANT_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PRODUCT_VARIANT_DETAILS` (
+  `PRODUCT_DETAILS_ID` int NOT NULL AUTO_INCREMENT,
+  `PRODUCT_VARIANT_ID` int NOT NULL,
+  `VARIANT_VALUE_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PRODUCT_DETAILS_ID`),
+  KEY `product_variant_value_idx` (`VARIANT_VALUE_ID`),
+  KEY `product_variant_idx` (`PRODUCT_VARIANT_ID`),
+  CONSTRAINT `product_variants` FOREIGN KEY (`PRODUCT_VARIANT_ID`) REFERENCES `PRODUCT_VARIANTS` (`PRODUCT_VARIANT_ID`),
+  CONSTRAINT `product_variants_value` FOREIGN KEY (`VARIANT_VALUE_ID`) REFERENCES `VARIANT_VALUE` (`VALUE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROMO_FOR`
+--
+
+DROP TABLE IF EXISTS `PROMO_FOR`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROMO_FOR` (
+  `PROMO_FOR_ID` int NOT NULL AUTO_INCREMENT,
+  `PROMO_FOR_TYPE` varchar(45) NOT NULL,
+  `IS_DELETED` varchar(45) NOT NULL,
+  PRIMARY KEY (`PROMO_FOR_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROMO_FOR_LIST`
+--
+
+DROP TABLE IF EXISTS `PROMO_FOR_LIST`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROMO_FOR_LIST` (
+  `PROMO_FOR_LIST_ID` int NOT NULL AUTO_INCREMENT,
+  `PROMO_ID` int NOT NULL,
+  `PROMO_FOR_ID` int DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `BUY_ID` int DEFAULT NULL,
+  `GET_ID` int DEFAULT '0',
+  `BUY_ID_QUANTITY` int DEFAULT NULL,
+  `GET_ID_QUANTITY` int DEFAULT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PROMO_FOR_LIST_ID`),
+  KEY `fk_PROMO_MASTER_idx` (`PROMO_ID`),
+  KEY `fk_PROMO_STORE_ID` (`STORE_ID`),
+  KEY `fk_PROMO_FOR_ID` (`PROMO_FOR_ID`),
+  CONSTRAINT `fk_PROMO_FOR_ID` FOREIGN KEY (`PROMO_FOR_ID`) REFERENCES `PROMO_FOR` (`PROMO_FOR_ID`),
+  CONSTRAINT `fk_PROMO_MASTER` FOREIGN KEY (`PROMO_ID`) REFERENCES `PROMO_MASTER` (`PROMO_ID`),
+  CONSTRAINT `fk_PROMO_STORE_ID` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROMO_MASTER`
+--
+
+DROP TABLE IF EXISTS `PROMO_MASTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROMO_MASTER` (
+  `PROMO_ID` int NOT NULL AUTO_INCREMENT,
+  `STORE_ID` int DEFAULT NULL,
+  `PROMO_NAME` varchar(51) NOT NULL,
+  `ACTIVE_DATE` datetime DEFAULT NULL,
+  `EXPIRY_DATE` datetime NOT NULL COMMENT ' ',
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `PROMO_VALUE_TYPE_ID` int NOT NULL,
+  `PROMO_VALUE` varchar(45) DEFAULT NULL,
+  `PROMO_FOR_ID` int NOT NULL,
+  `NUMBER_OF_USES` int DEFAULT NULL,
+  `IS_DELETED` tinyint NOT NULL,
+  `BUY_COUNT` int DEFAULT '0',
+  `GET_COUNT` int DEFAULT '0',
+  `MIN_OR_MAXVALUES` varchar(50) DEFAULT NULL,
+  `AUTO_APPLY` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`PROMO_ID`),
+  KEY `fk_PROMO_FOR_idx` (`PROMO_FOR_ID`),
+  KEY `STORE_PROMO` (`STORE_ID`),
+  KEY `fk_PROMO_VALUE_TYPE_idx` (`PROMO_VALUE_TYPE_ID`),
+  CONSTRAINT `fk_PROMO_FOR` FOREIGN KEY (`PROMO_FOR_ID`) REFERENCES `PROMO_FOR` (`PROMO_FOR_ID`),
+  CONSTRAINT `fk_PROMO_VALUE_TYPE` FOREIGN KEY (`PROMO_VALUE_TYPE_ID`) REFERENCES `PROMO_VALUE_TYPE` (`PROMO_VALUE_TYPE_ID`),
+  CONSTRAINT `STORE_PROMO` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROMO_VALUE_TYPE`
+--
+
+DROP TABLE IF EXISTS `PROMO_VALUE_TYPE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROMO_VALUE_TYPE` (
+  `PROMO_VALUE_TYPE_ID` int NOT NULL AUTO_INCREMENT,
+  `PROMO_VALUE_TYPE` varchar(45) NOT NULL,
+  `IS_DELETED` varchar(45) NOT NULL,
+  PRIMARY KEY (`PROMO_VALUE_TYPE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROVIDER`
+--
+
+DROP TABLE IF EXISTS `PROVIDER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROVIDER` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(45) NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `PROVIDER_BASED_COMPONENT_RESTRICTION`
+--
+
+DROP TABLE IF EXISTS `PROVIDER_BASED_COMPONENT_RESTRICTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `PROVIDER_BASED_COMPONENT_RESTRICTION` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `COMPONENT_ID` int DEFAULT NULL,
+  `PROVIDER_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `frign_key_1_idx` (`COMPONENT_ID`),
+  KEY `frign_key_2_idx` (`PROVIDER_ID`),
+  CONSTRAINT `frign_key_1` FOREIGN KEY (`COMPONENT_ID`) REFERENCES `UI_COMPONENTS` (`COMPONENT_ID`),
+  CONSTRAINT `frign_key_2` FOREIGN KEY (`PROVIDER_ID`) REFERENCES `PROVIDER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE`
+--
+
+DROP TABLE IF EXISTS `RESOURCE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE` (
+  `RESOURCE_ID` int NOT NULL AUTO_INCREMENT,
+  `RESOURCE_NAME` varchar(45) NOT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `IS_DELETE` tinyint NOT NULL DEFAULT '0',
+  `EMAIL_ID` varchar(45) NOT NULL,
+  `RESOURCE_TITLE_ID` int NOT NULL,
+  `USER_ROLE_ID` int NOT NULL,
+  `REPORTING_TO_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  `DEFAULT_BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`RESOURCE_ID`),
+  KEY `store_resource_idx` (`STORE_ID`),
+  KEY `resource_title_fk_idx` (`RESOURCE_TITLE_ID`),
+  KEY `resource_user_role_fk_idx` (`USER_ROLE_ID`),
+  KEY `resource_app_user_fk_idx` (`REPORTING_TO_ID`),
+  KEY `DEFAULT_BUSINESS_HIERARCHY_ID` (`DEFAULT_BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `resource_app_user_fk` FOREIGN KEY (`REPORTING_TO_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `RESOURCE_ibfk_1` FOREIGN KEY (`DEFAULT_BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `resource_title_fk` FOREIGN KEY (`RESOURCE_TITLE_ID`) REFERENCES `RESOURCE_TITLE` (`RESOURCE_TITLE_ID`),
+  CONSTRAINT `resource_user_role_fk` FOREIGN KEY (`USER_ROLE_ID`) REFERENCES `USER_ROLE` (`ROLE_ID`),
+  CONSTRAINT `store_resource` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=133 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE_ROLES`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_ROLES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_ROLES` (
+  `RESOURCE_ROLES_ID` int NOT NULL AUTO_INCREMENT,
+  `RESOURCE_ROLE_NAME` varchar(200) DEFAULT NULL,
+  `RESOURCE_ROLE_DESC` varchar(200) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  `BUSINESS_ID` int DEFAULT NULL,
+  PRIMARY KEY (`RESOURCE_ROLES_ID`),
+  KEY `RESOURCE_ROLE_BUSINESS_FK_idx` (`BUSINESS_ID`),
+  CONSTRAINT `RESOURCE_ROLE_BUSINESS_FK` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `RESOURCE_ROLE_MENU_MAP`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_ROLE_MENU_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_ROLE_MENU_MAP` (
+  `RESOURCE_ROLE_MENU_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `RESOURCE_ROLE_ID` int DEFAULT NULL,
+  `MASTER_MENU_ID` int DEFAULT NULL,
+  `RESOURCE_ROLE_MENU_NAME` varchar(200) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`RESOURCE_ROLE_MENU_MAP_ID`),
+  KEY `RESOURCE_ROLE_FK_idx` (`RESOURCE_ROLE_ID`),
+  KEY `MASTER_MENU_FK_idx` (`MASTER_MENU_ID`),
+  CONSTRAINT `MASTER_MENU_FK` FOREIGN KEY (`MASTER_MENU_ID`) REFERENCES `MASTER_MENU` (`MASTER_MENU_ID`),
+  CONSTRAINT `RESOURCE_ROLE_FK` FOREIGN KEY (`RESOURCE_ROLE_ID`) REFERENCES `RESOURCE_ROLES` (`RESOURCE_ROLES_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1462 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE_ROLE_USER_MAP`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_ROLE_USER_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_ROLE_USER_MAP` (
+  `RESOURCE_ROLE_USER_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `RESOURCE_ROLE_ID` int DEFAULT NULL,
+  `USER_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`RESOURCE_ROLE_USER_MAP_ID`),
+  KEY `RESOURCE_ROLE_FK_idx` (`RESOURCE_ROLE_ID`),
+  KEY `USER_MAP_FK_idx` (`USER_ID`),
+  CONSTRAINT `RESOURCE_ROLE_MAP_ROLE_FK` FOREIGN KEY (`RESOURCE_ROLE_ID`) REFERENCES `RESOURCE_ROLES` (`RESOURCE_ROLES_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=184 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE_SERVICE_PARTS_MAP`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_SERVICE_PARTS_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_SERVICE_PARTS_MAP` (
+  `RESOURCE_PART_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `RESOURCE_ID` int NOT NULL,
+  `PART_ID` int NOT NULL,
+  `COST` double NOT NULL DEFAULT '0',
+  `TAX` double NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`RESOURCE_PART_MAP_ID`),
+  KEY `Resource_idx` (`RESOURCE_ID`),
+  KEY `Services_idx` (`PART_ID`),
+  CONSTRAINT `Resource_idx` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `RESOURCE` (`RESOURCE_ID`),
+  CONSTRAINT `Services_idx` FOREIGN KEY (`PART_ID`) REFERENCES `SERVICE_PARTS` (`PART_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE_TARGET`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_TARGET`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_TARGET` (
+  `RESOURCE_ID` int NOT NULL,
+  `TARGET_TYPE` int NOT NULL,
+  `YEAR` varchar(45) NOT NULL,
+  `MONTH` int DEFAULT NULL,
+  `WEEK` int DEFAULT NULL,
+  `VALUE` varchar(45) NOT NULL,
+  `BUSINESS_ID` int NOT NULL,
+  `IS_DELETE` tinyint DEFAULT '0',
+  `RESOURCE_TARGET_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_HIERARCHY_ID` int NOT NULL,
+  PRIMARY KEY (`RESOURCE_TARGET_ID`),
+  KEY `business_detail_fk_idx` (`BUSINESS_ID`),
+  KEY `resource_fk_idx` (`RESOURCE_ID`),
+  KEY `fk_RESOURCE_TARGET_buz_hierchy_idx` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `business_detail_fk` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_RESOURCE_TARGET_buz_hierchy` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `resource_fk` FOREIGN KEY (`RESOURCE_ID`) REFERENCES `RESOURCE` (`RESOURCE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RESOURCE_TITLE`
+--
+
+DROP TABLE IF EXISTS `RESOURCE_TITLE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RESOURCE_TITLE` (
+  `RESOURCE_TITLE_ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(50) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`RESOURCE_TITLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `ROLE_BASED_COMPONENT_RESTRICTION`
+--
+
+DROP TABLE IF EXISTS `ROLE_BASED_COMPONENT_RESTRICTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ROLE_BASED_COMPONENT_RESTRICTION` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `COMPONENT_ID` int NOT NULL,
+  `ROLE_ID` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_ACCESSABLE_COMPONENTS_1_idx` (`COMPONENT_ID`),
+  KEY `fk_ACCESSABLE_COMPONENTS_2_idx` (`ROLE_ID`),
+  CONSTRAINT `fk_ACCESSABLE_COMPONENTS_1` FOREIGN KEY (`COMPONENT_ID`) REFERENCES `UI_COMPONENTS` (`COMPONENT_ID`),
+  CONSTRAINT `fk_ACCESSABLE_COMPONENTS_2` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLE` (`ROLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ROLE_PAGE_MAP`
+--
+
+DROP TABLE IF EXISTS `ROLE_PAGE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ROLE_PAGE_MAP` (
+  `ROLE_PAGE_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `ROLE_ID` int NOT NULL,
+  `PAGE_ID` int NOT NULL,
+  PRIMARY KEY (`ROLE_PAGE_MAP_ID`),
+  KEY `fk_ROLE_PAGE_MAP_PAGEID_idx` (`PAGE_ID`),
+  KEY `fk_ROLE_PAGE_MAP_ROLEID_idx` (`ROLE_ID`),
+  CONSTRAINT `fk_ROLE_PAGE_MAP_PAGEID` FOREIGN KEY (`PAGE_ID`) REFERENCES `ACCESSABLE_PAGES` (`PAGE_ID`),
+  CONSTRAINT `fk_ROLE_PAGE_MAP_ROLEID` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLE` (`ROLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=898 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RULE_ENTITY`
+--
+
+DROP TABLE IF EXISTS `RULE_ENTITY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RULE_ENTITY` (
+  `ENTITY_ID` int NOT NULL AUTO_INCREMENT,
+  `COLUMN_VALUE` varchar(100) DEFAULT NULL,
+  `CONDITION_ID` int NOT NULL,
+  `GROUP_ID` int NOT NULL,
+  `META_ID` int NOT NULL,
+  `FIELD_TYPE` int NOT NULL,
+  `AGGREGATION_TYPE` varchar(45) DEFAULT NULL,
+  `DATE_FORMAT` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ENTITY_ID`),
+  KEY `FK_byy9tspidii00lhk5g3nxpmlj` (`CONDITION_ID`),
+  KEY `FK_tbnadihri468us1r10qa06ad8` (`GROUP_ID`),
+  KEY `FK_reglkrlfwtn171j81peknhl5q` (`META_ID`),
+  CONSTRAINT `FK_byy9tspidii00lhk5g3nxpmlj` FOREIGN KEY (`CONDITION_ID`) REFERENCES `COLUMN_CONDITION` (`COLUMN_CONDITION_ID`),
+  CONSTRAINT `FK_tbnadihri468us1r10qa06ad8` FOREIGN KEY (`GROUP_ID`) REFERENCES `RULE_GROUP` (`GROUP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1453 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RULE_GROUP`
+--
+
+DROP TABLE IF EXISTS `RULE_GROUP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RULE_GROUP` (
+  `GROUP_ID` int NOT NULL AUTO_INCREMENT,
+  `IS_DELETED` tinyint DEFAULT NULL,
+  `OPERATOR` varchar(10) NOT NULL,
+  `PARENT_GROUP_ID` int DEFAULT NULL,
+  PRIMARY KEY (`GROUP_ID`),
+  KEY `FK_kiyhq18wx4m3fsgriplprygv5` (`PARENT_GROUP_ID`),
+  CONSTRAINT `FK_kiyhq18wx4m3fsgriplprygv5` FOREIGN KEY (`PARENT_GROUP_ID`) REFERENCES `RULE_GROUP` (`GROUP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=382 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RULE_IMAGE_MAP`
+--
+
+DROP TABLE IF EXISTS `RULE_IMAGE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RULE_IMAGE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `DYNAMIC_IMAGE_ID` int NOT NULL,
+  `RULE_ID` int DEFAULT NULL,
+  `IMAGE_ID` varchar(150) NOT NULL,
+  `PRIORITY` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `fk_rimDIM` (`DYNAMIC_IMAGE_ID`),
+  KEY `fk_rimRuleMaster` (`RULE_ID`),
+  CONSTRAINT `fk_ rimRuleMaster` FOREIGN KEY (`RULE_ID`) REFERENCES `RULE_MASTER` (`RULE_MASTER_ID`),
+  CONSTRAINT `fk_rimDIM` FOREIGN KEY (`DYNAMIC_IMAGE_ID`) REFERENCES `DYNAMIC_IMAGE_MASTER` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `RULE_MASTER`
+--
+
+DROP TABLE IF EXISTS `RULE_MASTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `RULE_MASTER` (
+  `RULE_MASTER_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime NOT NULL,
+  `HEAD_GROUP_ID` int DEFAULT NULL,
+  `LIST_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `GROUP_NAME` varchar(255) DEFAULT NULL,
+  `IS_CLONED` tinyint(1) DEFAULT '0',
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`RULE_MASTER_ID`),
+  KEY `FK_ipcyegx1e1q3w70pmf1fctsw5` (`HEAD_GROUP_ID`),
+  KEY `FK_33suqkvvssc1k908j4bcviste` (`LIST_ID`),
+  CONSTRAINT `FK_33suqkvvssc1k908j4bcviste` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `FK_ipcyegx1e1q3w70pmf1fctsw5` FOREIGN KEY (`HEAD_GROUP_ID`) REFERENCES `RULE_GROUP` (`GROUP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=471 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SCHEDULAR`
+--
+
+DROP TABLE IF EXISTS `SCHEDULAR`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SCHEDULAR` (
+  `SCHEDULAR_ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `START_DATE` datetime DEFAULT NULL,
+  `SCHEDULAR_TYPE` int NOT NULL COMMENT 'Schedule Type can be following\n1 - HOURLY\n2 - DAILY\n3 - WEEKLY\n4 - MONTHLY\n5 - YEARLY',
+  `REPEAT_INTERVAL` int DEFAULT NULL COMMENT 'If schedule type is 3 (WEEKLY),\nThe value will be HEXADECIMAL value which is BIT-AND of any 7 bit value provided below\n1 ',
+  `REPEAT_ON` int DEFAULT NULL,
+  `END_TYPE` int NOT NULL,
+  `END_OCCURENCES_LIMIT` int DEFAULT NULL,
+  `END_DATE` datetime DEFAULT NULL,
+  `SCHEDULAR_NAME` varchar(200) NOT NULL,
+  `SCHEDULAR_RUN_TYPE` int NOT NULL DEFAULT '1',
+  `CREATION_DATE` datetime NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `SCHEDULED_BY` int NOT NULL DEFAULT '1',
+  PRIMARY KEY (`SCHEDULAR_ID`),
+  KEY `fk_USER_ID_1_idx` (`USER_ID`),
+  KEY `fk_REPEAT_ON_1_idx` (`REPEAT_ON`),
+  CONSTRAINT `fk_REPEAT_ON_1` FOREIGN KEY (`REPEAT_ON`) REFERENCES `JOB_REPEAT_ON` (`JOB_REPEAT_ON_ID`),
+  CONSTRAINT `fk_USER_ID_1` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=725 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SERVICES`
+--
+
+DROP TABLE IF EXISTS `SERVICES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SERVICES` (
+  `SERVICE_ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_NAME` varchar(45) NOT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `SERVICE_DETAILS` varchar(200) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SERVICE_ID`),
+  KEY `store_service_idx` (`STORE_ID`),
+  CONSTRAINT `store_service` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SERVICE_INTEGRATION_META_MAP`
+--
+
+DROP TABLE IF EXISTS `SERVICE_INTEGRATION_META_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SERVICE_INTEGRATION_META_MAP` (
+  `MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_ID` int NOT NULL,
+  `FIELD_NAME` varchar(100) NOT NULL,
+  `META_ID` int NOT NULL,
+  PRIMARY KEY (`MAP_ID`),
+  KEY `FK_sub_file_meta_data_meta_id` (`META_ID`),
+  CONSTRAINT `FK_sub_file_meta_data_meta_id` FOREIGN KEY (`META_ID`) REFERENCES `SUB_FILE_META_DATA` (`META_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SERVICE_PARTS`
+--
+
+DROP TABLE IF EXISTS `SERVICE_PARTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SERVICE_PARTS` (
+  `PART_ID` int NOT NULL AUTO_INCREMENT,
+  `PART_NAME` varchar(45) NOT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `PART_DETAILS` varchar(200) DEFAULT NULL,
+  `DURATION` int NOT NULL DEFAULT '0',
+  `PRE_WAITING_TIME` int DEFAULT '0',
+  `POST_WAITING_TIME` int DEFAULT '0',
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`PART_ID`),
+  KEY `part_service_idx` (`STORE_ID`),
+  CONSTRAINT `service_parts_fk` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SERVICE_PARTS_MAP`
+--
+
+DROP TABLE IF EXISTS `SERVICE_PARTS_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SERVICE_PARTS_MAP` (
+  `PART_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `SERVICE_ID` int NOT NULL,
+  `PART_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_PRIMARY` tinyint(1) NOT NULL DEFAULT '0',
+  `ORDER_ID` int DEFAULT NULL,
+  PRIMARY KEY (`PART_MAP_ID`),
+  KEY `service_map_idx` (`SERVICE_ID`),
+  KEY `service_part_map_id_fk` (`PART_ID`),
+  CONSTRAINT `service_id_fk` FOREIGN KEY (`SERVICE_ID`) REFERENCES `SERVICES` (`SERVICE_ID`),
+  CONSTRAINT `service_part_map_id_fk` FOREIGN KEY (`PART_ID`) REFERENCES `SERVICE_PARTS` (`PART_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SETTING_CONFIG`
+--
+
+DROP TABLE IF EXISTS `SETTING_CONFIG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SETTING_CONFIG` (
+  `CONFIG_ID` int NOT NULL AUTO_INCREMENT,
+  `SETTING_ID` int NOT NULL,
+  `CONFIG_FOR` varchar(45) NOT NULL,
+  `REFERENCE_ID` int NOT NULL COMMENT 'REFERENCE_ID IS USER ID OR BUSINESS_MODEL_ID DEPENDS ON CONFIG_FOR',
+  `CONFIG_VALUE` varchar(100) NOT NULL,
+  PRIMARY KEY (`CONFIG_ID`),
+  UNIQUE KEY `CONFIG_ID_UNIQUE` (`CONFIG_ID`),
+  KEY `fk_SETTNG_CONFIG_1_idx` (`SETTING_ID`),
+  CONSTRAINT `fk_SETTNG_CONFIG_1` FOREIGN KEY (`SETTING_ID`) REFERENCES `MASTER_SETTING` (`SETTING_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=435 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SM_CONFIG_PARAMETER`
+--
+
+DROP TABLE IF EXISTS `SM_CONFIG_PARAMETER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_CONFIG_PARAMETER` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SM_CONFIG_ID` int NOT NULL,
+  `PARAMETER_ID` int NOT NULL,
+  `PARAMETER_VALUE` varchar(500) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_CONFIG_PARAMETER_1_idx` (`PARAMETER_ID`),
+  KEY `fk_SM_CONFIG_PARAMETER_2_idx` (`SM_CONFIG_ID`),
+  CONSTRAINT `fk_SM_CONFIG_PARAMETER_1` FOREIGN KEY (`PARAMETER_ID`) REFERENCES `SM_CONFIG_PARAMETER_MASTER` (`ID`),
+  CONSTRAINT `fk_SM_CONFIG_PARAMETER_2` FOREIGN KEY (`SM_CONFIG_ID`) REFERENCES `SM_PUBLISH_CONFIG_DETAILS` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SM_CONFIG_PARAMETER_MASTER`
+--
+
+DROP TABLE IF EXISTS `SM_CONFIG_PARAMETER_MASTER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_CONFIG_PARAMETER_MASTER` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SM_TYPE_ID` int NOT NULL,
+  `PARAMETER_NAME` varchar(45) NOT NULL,
+  `PARAMETER_DISPLAY_NAME` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_CONFIG_PARAMETER_MASTER_1_idx` (`SM_TYPE_ID`),
+  CONSTRAINT `fk_SM_CONFIG_PARAMETER_MASTER_1` FOREIGN KEY (`SM_TYPE_ID`) REFERENCES `SOCIAL_MEDIA_SETTING` (`SOCIAL_MEDIA_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SM_PUBLISH_CONFIG_DETAILS`
+--
+
+DROP TABLE IF EXISTS `SM_PUBLISH_CONFIG_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_PUBLISH_CONFIG_DETAILS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `SM_TYPE_ID` int NOT NULL,
+  `PUBLISH_LINK` varchar(45) DEFAULT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_PUBLISH_CONFIG_DETAILS_1_idx` (`USER_ID`),
+  KEY `fk_SM_PUBLISH_CONFIG_DETAILS_2_idx` (`SM_TYPE_ID`),
+  CONSTRAINT `fk_SM_PUBLISH_CONFIG_DETAILS_1` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `fk_SM_PUBLISH_CONFIG_DETAILS_2` FOREIGN KEY (`SM_TYPE_ID`) REFERENCES `SOCIAL_MEDIA_SETTING` (`SOCIAL_MEDIA_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SM_PUBLISH_MESSAGE`
+--
+
+DROP TABLE IF EXISTS `SM_PUBLISH_MESSAGE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_PUBLISH_MESSAGE` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SM_SCHEDULE_ID` int NOT NULL,
+  `MESSAGE_TYPE` int NOT NULL COMMENT '1 - TEXT\n2 - IMAGE\n3 - LINK',
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `VALUE` varchar(1000) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_PUBLISH_MESSAGE_1_idx` (`SM_SCHEDULE_ID`),
+  CONSTRAINT `fk_SM_PUBLISH_MESSAGE_1` FOREIGN KEY (`SM_SCHEDULE_ID`) REFERENCES `SM_PUBLISH_SCHEDULE` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SM_PUBLISH_SCHEDULE`
+--
+
+DROP TABLE IF EXISTS `SM_PUBLISH_SCHEDULE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_PUBLISH_SCHEDULE` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CONFIG_ID` int NOT NULL,
+  `SCHEDULE_ID` int NOT NULL,
+  `CREATION_DATE` datetime NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `STATUS` varchar(45) NOT NULL COMMENT 'INIT\nSCHEDULED\nCOMPLETED',
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_PUBLISH_SCHEDULE_1_idx` (`CONFIG_ID`),
+  KEY `fk_SM_PUBLISH_SCHEDULE_2_idx` (`SCHEDULE_ID`),
+  CONSTRAINT `fk_SM_PUBLISH_SCHEDULE_1` FOREIGN KEY (`CONFIG_ID`) REFERENCES `SM_PUBLISH_CONFIG_DETAILS` (`ID`),
+  CONSTRAINT `fk_SM_PUBLISH_SCHEDULE_2` FOREIGN KEY (`SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SM_SCHEDULE_LOG`
+--
+
+DROP TABLE IF EXISTS `SM_SCHEDULE_LOG`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SM_SCHEDULE_LOG` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `PUBLISH_ID` int NOT NULL,
+  `PUBLISHED_DATE` datetime NOT NULL,
+  `STATUS` varchar(45) NOT NULL COMMENT 'SUCCESS\nFAILURE',
+  `MESSAGE` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_SM_SCHEDULE_LOG_1_idx` (`PUBLISH_ID`),
+  CONSTRAINT `fk_SM_SCHEDULE_LOG_1` FOREIGN KEY (`PUBLISH_ID`) REFERENCES `SM_PUBLISH_SCHEDULE` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SOCIAL_MEDIA_SETTING`
+--
+
+DROP TABLE IF EXISTS `SOCIAL_MEDIA_SETTING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SOCIAL_MEDIA_SETTING` (
+  `SOCIAL_MEDIA_ID` int NOT NULL,
+  `MEDIA_NAME` varchar(45) DEFAULT NULL,
+  `SOCIAL_MEDIA_ICON` varchar(500) DEFAULT NULL,
+  `MEDIA_IMAGE` varchar(100) DEFAULT NULL,
+  `IS_PUBLISH_POST_SUPPORT` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SOCIAL_MEDIA_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SPAM_WEIGH`
+--
+
+DROP TABLE IF EXISTS `SPAM_WEIGH`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SPAM_WEIGH` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SPAM_WORDS` varchar(100) DEFAULT NULL,
+  `SPAM_WEIGHTAGE` double DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=259 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SPECIAL_META_DATA`
+--
+
+DROP TABLE IF EXISTS `SPECIAL_META_DATA`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SPECIAL_META_DATA` (
+  `META_ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(150) NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `DATA_FORMAT` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`META_ID`),
+  KEY `fk_smdColumnType` (`COLUMN_TYPE_ID`),
+  CONSTRAINT `fk_smdColumnType` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `STAFF_DETAILS`
+--
+
+DROP TABLE IF EXISTS `STAFF_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `STAFF_DETAILS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `STAFF_ID` varchar(45) NOT NULL,
+  `STAFF_CODE` varchar(45) DEFAULT NULL,
+  `FIRST_NAME` varchar(45) DEFAULT NULL,
+  `LAST_NAME` varchar(45) DEFAULT NULL,
+  `QUALIFICATION` varchar(45) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `STAGE_DETAILS`
+--
+
+DROP TABLE IF EXISTS `STAGE_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `STAGE_DETAILS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `STAGE` int DEFAULT NULL,
+  `STAGE_NAME` varchar(45) DEFAULT NULL,
+  `PAGE_ID` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `STORE_DETAILS`
+--
+
+DROP TABLE IF EXISTS `STORE_DETAILS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `STORE_DETAILS` (
+  `STORE_ID` int NOT NULL AUTO_INCREMENT,
+  `EXTERNAL_STORE_ID` varchar(45) NOT NULL,
+  `STORE_NAME` varchar(45) NOT NULL,
+  `STORE_LOGO` varchar(500) NOT NULL,
+  `STORE_ADDRESS` varchar(100) NOT NULL,
+  `STORE_PHONE_NUMBER` varchar(45) NOT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `MODIFIED_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_DATA_SHARED` int NOT NULL DEFAULT '0',
+  `AUTH_TOKEN` varchar(100) NOT NULL,
+  PRIMARY KEY (`STORE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUBLIST_MENU_MAP`
+--
+
+DROP TABLE IF EXISTS `SUBLIST_MENU_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUBLIST_MENU_MAP` (
+  `SUBLIST_MENU_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `MENU_ID` int NOT NULL,
+  `SUBLIST_ID` int NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SUBLIST_MENU_MAP_ID`),
+  KEY `fk_SUBLIST_MENU_SUBLIST_idx` (`SUBLIST_ID`),
+  KEY `fk_SUBLIST_MENU_MAP_MENU_idx` (`MENU_ID`),
+  CONSTRAINT `fk_SUBLIST_MENU_MAP_MENU` FOREIGN KEY (`MENU_ID`) REFERENCES `MENU` (`MENU_ID`),
+  CONSTRAINT `fk_SUBLIST_MENU_SUBLIST` FOREIGN KEY (`SUBLIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SUB_CATEGORY`
+--
+
+DROP TABLE IF EXISTS `SUB_CATEGORY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_CATEGORY` (
+  `SUB_CATEGORY_ID` int NOT NULL AUTO_INCREMENT,
+  `SUB_CATEGORY_NAME` varchar(200) NOT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SUB_CATEGORY_ID`),
+  KEY `business_sub_category_idx` (`STORE_ID`),
+  CONSTRAINT `BUSINESS_SUB_CATAGORY` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SUB_FILE_META_DATA`
+--
+
+DROP TABLE IF EXISTS `SUB_FILE_META_DATA`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_FILE_META_DATA` (
+  `META_ID` int NOT NULL AUTO_INCREMENT,
+  `COLUMN_NAME` varchar(50) NOT NULL,
+  `COLUMN_POSITION` int NOT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `LIST_ID` int NOT NULL,
+  `DATA_FORMATE` varchar(45) DEFAULT NULL,
+  `REFERANCE_META_ID` int DEFAULT NULL,
+  `UNIQUE_ID` tinyint DEFAULT '0',
+  PRIMARY KEY (`META_ID`),
+  UNIQUE KEY `unique_index_name_listid` (`COLUMN_NAME`,`LIST_ID`),
+  KEY `FK_qirba983kgx7d0r6r3ocoddyc` (`COLUMN_TYPE_ID`),
+  KEY `FK_tcc5lxo8ah2dwh8yovoqo4qcr` (`LIST_ID`),
+  KEY `IDX_NAME_LIST` (`COLUMN_NAME`,`LIST_ID`),
+  KEY `fk_SUB_FILE_META_DATA_1_idx` (`META_ID`,`REFERANCE_META_ID`),
+  CONSTRAINT `FK_qirba983kgx7d0r6r3ocoddyc` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`),
+  CONSTRAINT `FK_tcc5lxo8ah2dwh8yovoqo4qcr` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2251 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SUB_FILE_META_DATA_FOR_INNER_DATA`
+--
+
+DROP TABLE IF EXISTS `SUB_FILE_META_DATA_FOR_INNER_DATA`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_FILE_META_DATA_FOR_INNER_DATA` (
+  `META_ID` int NOT NULL AUTO_INCREMENT,
+  `SUB_FILE_META_DATA_ID` int DEFAULT NULL,
+  `COLUMN_NAME` varchar(50) NOT NULL,
+  `COLUMN_TYPE_ID` int NOT NULL,
+  `DATA_FORMATE` varchar(45) DEFAULT NULL,
+  `REFERENCE_META_ID` int DEFAULT NULL,
+  PRIMARY KEY (`META_ID`),
+  KEY `fx_subfile_meta_data_id_idx` (`SUB_FILE_META_DATA_ID`),
+  KEY `fk_column_type_idx_idx` (`COLUMN_TYPE_ID`),
+  KEY `fk_subfile_meta_data_for_inner_data_idx` (`REFERENCE_META_ID`),
+  CONSTRAINT `fk_column_type_idx` FOREIGN KEY (`COLUMN_TYPE_ID`) REFERENCES `COLUMN_TYPE` (`COLUMN_TYPE_ID`),
+  CONSTRAINT `fk_subfile_meta_data_for_inner_data` FOREIGN KEY (`REFERENCE_META_ID`) REFERENCES `SUB_FILE_META_DATA_FOR_INNER_DATA` (`META_ID`),
+  CONSTRAINT `fx_subfile_meta_data_id` FOREIGN KEY (`SUB_FILE_META_DATA_ID`) REFERENCES `SUB_FILE_META_DATA` (`META_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=718 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SUB_FILE_SELECT`
+--
+
+DROP TABLE IF EXISTS `SUB_FILE_SELECT`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_FILE_SELECT` (
+  `FIELD_ID` int NOT NULL AUTO_INCREMENT,
+  `FIELD_NAME` varchar(45) DEFAULT NULL,
+  `BUSINESS_ID` int NOT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`FIELD_ID`),
+  UNIQUE KEY `unique_index_fieldname_businessid` (`FIELD_NAME`,`BUSINESS_ID`),
+  KEY `fk_SUB_FILE_SELECT_1_idx` (`BUSINESS_ID`),
+  CONSTRAINT `fk_SUB_FILE_SELECT_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=173 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUB_FILE_SELECT_MAP`
+--
+
+DROP TABLE IF EXISTS `SUB_FILE_SELECT_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_FILE_SELECT_MAP` (
+  `MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `SUBFILE_META_ID` int DEFAULT NULL,
+  `SELECT_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`MAP_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUB_FILE_SELECT_OPTION`
+--
+
+DROP TABLE IF EXISTS `SUB_FILE_SELECT_OPTION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_FILE_SELECT_OPTION` (
+  `OPTION_ID` int NOT NULL AUTO_INCREMENT,
+  `OPTION_NAME` varchar(45) DEFAULT NULL,
+  `FIELD_ID` int DEFAULT NULL,
+  `POSITION` int DEFAULT NULL,
+  `EDIT_RESTRICTED` tinyint DEFAULT '0',
+  `DELETE_RESTRICTED` tinyint DEFAULT '0',
+  `IS_DELETED` tinyint DEFAULT '0',
+  PRIMARY KEY (`OPTION_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1150 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUB_LIST`
+--
+
+DROP TABLE IF EXISTS `SUB_LIST`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_LIST` (
+  `LIST_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime NOT NULL,
+  `LIST_DESC` varchar(255) DEFAULT NULL,
+  `LIST_NAME` varchar(45) NOT NULL,
+  `USER_ID` int NOT NULL,
+  `IS_IDENTITY_USER_GENERATED` tinyint(1) DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IDENTITY_META_ID` int DEFAULT NULL,
+  `COLLECTION_NAME` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`LIST_ID`),
+  KEY `FK_gdhh23fkid5x8aeve739qo4cx` (`USER_ID`),
+  KEY `IDX_LIST_USER_UNQ` (`LIST_NAME`,`USER_ID`),
+  CONSTRAINT `FK_gdhh23fkid5x8aeve739qo4cx` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUB_LIST_EXTENSION`
+--
+
+DROP TABLE IF EXISTS `SUB_LIST_EXTENSION`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_LIST_EXTENSION` (
+  `EXTENSION_ID` int NOT NULL AUTO_INCREMENT,
+  `LIST_ID` int NOT NULL,
+  `XML_DATA_LOCATION` longtext NOT NULL,
+  PRIMARY KEY (`EXTENSION_ID`),
+  KEY `SUBLIST_EXT_SUBLISTID_idx` (`LIST_ID`),
+  CONSTRAINT `SUBLIST_EXT_SUBLISTID` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SUB_LIST_POSITION_MAP`
+--
+
+DROP TABLE IF EXISTS `SUB_LIST_POSITION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SUB_LIST_POSITION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SUB_LIST_META_ID` int NOT NULL,
+  `PAGE_ID` int NOT NULL,
+  `COLUMN_POSITON` int NOT NULL,
+  `ALIAS` varchar(45) DEFAULT NULL,
+  `SECTION` int DEFAULT NULL,
+  `LINE` int DEFAULT NULL,
+  `POSITION` int DEFAULT NULL,
+  `BUSINESS_ID` int DEFAULT NULL,
+  `IS_AVAILABLE` tinyint NOT NULL DEFAULT '1',
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  `SYSTEM_REQUIRED_FIELDS` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `FK_SUB` (`SUB_LIST_META_ID`),
+  KEY `FK_SECTION_idx` (`SECTION`),
+  KEY `fk_business_details_id_idx` (`BUSINESS_ID`),
+  CONSTRAINT `fk_business_details_id` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `FK_SECTION` FOREIGN KEY (`SECTION`) REFERENCES `STAGE_DETAILS` (`ID`),
+  CONSTRAINT `FK_SUB` FOREIGN KEY (`SUB_LIST_META_ID`) REFERENCES `SUB_FILE_META_DATA` (`META_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2209 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `SURVEY`
+--
+
+DROP TABLE IF EXISTS `SURVEY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SURVEY` (
+  `SURVEY_ID` int NOT NULL AUTO_INCREMENT,
+  `BUSINESS_ID` int NOT NULL,
+  `VERSION_ID` int DEFAULT NULL,
+  `SURVEY_NAME` varchar(45) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `SURVEY_TYPE` varchar(45) NOT NULL,
+  `USER_ID` int NOT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  `SURVEY_PAGE_ID` int DEFAULT NULL,
+  PRIMARY KEY (`SURVEY_ID`),
+  KEY `fk_SURVEY_1_idx` (`BUSINESS_ID`),
+  KEY `fk_SURVEY_2_idx` (`USER_ID`),
+  KEY `BUSINESS_HIERARCHY_ID` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `fk_SURVEY_1` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_SURVEY_2` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `SURVEY_ibfk_1` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SURVEY_QUESTIONS`
+--
+
+DROP TABLE IF EXISTS `SURVEY_QUESTIONS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SURVEY_QUESTIONS` (
+  `QUESTION_ID` int NOT NULL AUTO_INCREMENT,
+  `SURVEY_ID` int NOT NULL,
+  `QUESTION` varchar(500) NOT NULL,
+  `VERSION` int NOT NULL,
+  `CREATION_DATE` datetime NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`QUESTION_ID`),
+  KEY `fk_SURVEY_QUESTIONS_1_idx` (`SURVEY_ID`),
+  CONSTRAINT `fk_SURVEY_QUESTIONS_1` FOREIGN KEY (`SURVEY_ID`) REFERENCES `SURVEY` (`SURVEY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SURVEY_SCHEDULE_MAP`
+--
+
+DROP TABLE IF EXISTS `SURVEY_SCHEDULE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SURVEY_SCHEDULE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CAMPAIGN_ID` int NOT NULL,
+  `SURVEY_ID` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `CAMPAIGN_ID_idx` (`CAMPAIGN_ID`),
+  KEY `SURVEY_ID_idx` (`SURVEY_ID`),
+  CONSTRAINT `CAMPAIGN_ID` FOREIGN KEY (`CAMPAIGN_ID`) REFERENCES `CAMPAIGN` (`CAMPAIGN_ID`),
+  CONSTRAINT `SURVEY_ID` FOREIGN KEY (`SURVEY_ID`) REFERENCES `SURVEY` (`SURVEY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SYSTEM_DATA_SELECT_MAP`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_DATA_SELECT_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SYSTEM_DATA_SELECT_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SYSTEM_DATA_NAME` varchar(100) NOT NULL,
+  `BUSINESS_ID` int NOT NULL,
+  `SELECT_ID` int NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `business_detail_systemselect_fk_idx` (`BUSINESS_ID`),
+  CONSTRAINT `business_detail_systemselect_fk` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `SYSTEM_PARAMETER`
+--
+
+DROP TABLE IF EXISTS `SYSTEM_PARAMETER`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `SYSTEM_PARAMETER` (
+  `SYSTEM_PARAMETER_ID` int NOT NULL AUTO_INCREMENT,
+  `PARAMETER_NAME` varchar(45) NOT NULL,
+  `PARAMETER_VALUE` varchar(255) NOT NULL,
+  `IS_SYSTEM_CONTROL` tinyint(1) NOT NULL,
+  `IS_VALIDATE` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SYSTEM_PARAMETER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TASK`
+--
+
+DROP TABLE IF EXISTS `TASK`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TASK` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SCHEDULAR_ID` int DEFAULT NULL,
+  `TO_WHOM` varchar(40) DEFAULT NULL,
+  `TO_WHOM_NAME` varchar(40) DEFAULT NULL,
+  `SURVEY_TEMPLATE_ID` int DEFAULT NULL,
+  `ATTACHMENTID` varchar(100) DEFAULT NULL,
+  `TASK_OWNER` int NOT NULL,
+  `SUBJECT` varchar(250) NOT NULL,
+  `PRODUCT_NAME_ID` int DEFAULT NULL,
+  `TASK_TYPE` int NOT NULL,
+  `LEAD_OR_ACCOUNT_ID` varchar(45) DEFAULT NULL,
+  `CONTACT_ID` varchar(45) DEFAULT NULL,
+  `OPPORTUNITY_ID` varchar(45) DEFAULT NULL,
+  `DUE_DATE` datetime NOT NULL,
+  `PRIORITY` int DEFAULT NULL,
+  `STATUS` int DEFAULT NULL,
+  `REMINDER_ENABLED` tinyint(1) NOT NULL DEFAULT '0',
+  `CAMPAIGN_ID` int DEFAULT NULL,
+  `DECRIPTION` varchar(1000) DEFAULT NULL,
+  `CALL_PURPOSE` varchar(45) DEFAULT NULL,
+  `CALL_RESULT` varchar(45) DEFAULT NULL,
+  `CALL_TYPE` varchar(45) DEFAULT NULL,
+  `FROM_DATE` datetime DEFAULT NULL,
+  `TO_DATE` datetime DEFAULT NULL,
+  `PARTICIPANTS` varchar(10000) DEFAULT NULL,
+  `SEARCH_TYPE` varchar(45) DEFAULT NULL,
+  `CREATED_BY` int NOT NULL,
+  `CREATED_DATE` datetime NOT NULL,
+  `MODIFIED_BY` int NOT NULL,
+  `MODIFIED_DATE` datetime NOT NULL,
+  `BUSINESS_DETAILS_ID` int NOT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  `SEARCHED_FROM` varchar(45) DEFAULT NULL,
+  `IS_ONINE_MEETING` tinyint(1) DEFAULT '0',
+  `ADDITIONAL_EMAIL_IDS` varchar(1000) DEFAULT NULL,
+  `LOCATION` varchar(1000) DEFAULT NULL,
+  `ONLINE_MEETING_ID` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `fk_campaign_id_idx` (`CAMPAIGN_ID`),
+  KEY `fk_task_owner_idx` (`TASK_OWNER`),
+  KEY `fk_created_by_idx` (`CREATED_BY`),
+  KEY `fk_modified_by_idx` (`MODIFIED_BY`),
+  KEY `fk_business_Detail` (`BUSINESS_DETAILS_ID`),
+  KEY `BUSINESS_HIERARCHY_ID` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `fk_business_Detail` FOREIGN KEY (`BUSINESS_DETAILS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`),
+  CONSTRAINT `fk_campaign_id` FOREIGN KEY (`CAMPAIGN_ID`) REFERENCES `CAMPAIGN` (`CAMPAIGN_ID`),
+  CONSTRAINT `fk_created_by` FOREIGN KEY (`CREATED_BY`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `fk_modified_by` FOREIGN KEY (`MODIFIED_BY`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `fk_task_owner` FOREIGN KEY (`TASK_OWNER`) REFERENCES `RESOURCE` (`RESOURCE_ID`),
+  CONSTRAINT `TASK_ibfk_1` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TEMPLATE`
+--
+
+DROP TABLE IF EXISTS `TEMPLATE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TEMPLATE` (
+  `TEMPLATE_ID` int NOT NULL AUTO_INCREMENT,
+  `CREATION_DATE` datetime NOT NULL,
+  `SUBJECT` varchar(300) NOT NULL,
+  `NAME` varchar(100) NOT NULL,
+  `TEMPLATE_DATA` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `TEMPLATE_PREVIEW_IMG` varchar(300) DEFAULT NULL,
+  `TEMPLATE_STATUS` varchar(45) NOT NULL,
+  `TEMPLATE_TYPE` varchar(45) NOT NULL,
+  `USER_ID` int DEFAULT NULL,
+  `LIST_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `CATEGORY_ID` int DEFAULT NULL,
+  `JSON_DATA` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `CREATION_FOR` varchar(45) DEFAULT NULL,
+  `TEMPLATE_EDITOR_TYPE` int NOT NULL,
+  `TEMPLATE_VERSION` int DEFAULT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`TEMPLATE_ID`),
+  KEY `FK_rdu85bvjc6c3hhpr650lqad66` (`USER_ID`),
+  KEY `FK_nykrpuifex5q7s8nmdkc230wr` (`LIST_ID`),
+  KEY `fk_TEMPLATE_1_idx` (`CATEGORY_ID`),
+  KEY `BUSINESS_HIERARCHY_ID` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `FK_nykrpuifex5q7s8nmdkc230wr` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `FK_rdu85bvjc6c3hhpr650lqad66` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `fk_TEMPLATE_1` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `TEMPLATE_CATEGORIES` (`CATEGORY_ID`),
+  CONSTRAINT `TEMPLATE_ibfk_1` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `TEMPLATE_CATEGORIES`
+--
+
+DROP TABLE IF EXISTS `TEMPLATE_CATEGORIES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TEMPLATE_CATEGORIES` (
+  `CATEGORY_ID` int NOT NULL AUTO_INCREMENT,
+  `CATEGORY_NAME` varchar(100) NOT NULL,
+  `IMAGE_URL` varchar(250) DEFAULT NULL,
+  `DESCRIPTION` varchar(500) DEFAULT NULL,
+  `IS_SPECIAL_FIELDS_REQUIRED` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`CATEGORY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TEMPLATE_CATEGORY_COMMUNICATION_MAP`
+--
+
+DROP TABLE IF EXISTS `TEMPLATE_CATEGORY_COMMUNICATION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TEMPLATE_CATEGORY_COMMUNICATION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `TEMPLATE_CATEGORY_ID` int NOT NULL,
+  `COMMUNICATION_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  `IS_NOTIFICATION_TYPE` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`),
+  KEY `fk_TEMPLATE_CATEGORY_COMMUNICATION_MAP_1_idx` (`TEMPLATE_CATEGORY_ID`),
+  CONSTRAINT `fk_TEMPLATE_CATEGORY_COMMUNICATION_MAP_1` FOREIGN KEY (`TEMPLATE_CATEGORY_ID`) REFERENCES `TEMPLATE_CATEGORIES` (`CATEGORY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TEMPLATE_CATEGORY_ROLE_MAP`
+--
+
+DROP TABLE IF EXISTS `TEMPLATE_CATEGORY_ROLE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TEMPLATE_CATEGORY_ROLE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `CATEGORY_ID` int NOT NULL,
+  `ROLE_ID` int NOT NULL,
+  `TEMPLATE_TYPE` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `forieng_1_idx` (`CATEGORY_ID`),
+  KEY `forieng_1_idx1` (`ROLE_ID`),
+  CONSTRAINT `forieng_1` FOREIGN KEY (`CATEGORY_ID`) REFERENCES `TEMPLATE_CATEGORIES` (`CATEGORY_ID`),
+  CONSTRAINT `forieng_2` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLE` (`ROLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TEMPLATE_HISTORY`
+--
+
+DROP TABLE IF EXISTS `TEMPLATE_HISTORY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TEMPLATE_HISTORY` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `TEMPLATE_ID` int NOT NULL,
+  `VERSION_ID` int NOT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `TEMPLATE_SUBJECT` varchar(300) NOT NULL,
+  `TEMPLATE_DATA` longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci,
+  `TEMPLATE_NAME` varchar(100) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_TEMPLATE_ID_idx` (`TEMPLATE_ID`),
+  CONSTRAINT `FKEY_TEMPLATE_ID` FOREIGN KEY (`TEMPLATE_ID`) REFERENCES `TEMPLATE` (`TEMPLATE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `THEMES`
+--
+
+DROP TABLE IF EXISTS `THEMES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `THEMES` (
+  `THEME_ID` int NOT NULL AUTO_INCREMENT,
+  `THEME_NAME` varchar(45) NOT NULL,
+  `THEME_PREVIEW_COLOR` varchar(45) NOT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`THEME_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TICKETS_PRIORITY`
+--
+
+DROP TABLE IF EXISTS `TICKETS_PRIORITY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TICKETS_PRIORITY` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `PRIORITY_NAME` varchar(45) DEFAULT NULL,
+  `SLA` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TICKETS_SEVERITY`
+--
+
+DROP TABLE IF EXISTS `TICKETS_SEVERITY`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TICKETS_SEVERITY` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `NAME` varchar(45) DEFAULT NULL,
+  `SLA` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TICKETS_STATUS`
+--
+
+DROP TABLE IF EXISTS `TICKETS_STATUS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TICKETS_STATUS` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `STATUS` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `TICKETS_TYPES`
+--
+
+DROP TABLE IF EXISTS `TICKETS_TYPES`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `TICKETS_TYPES` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `TYPE` varchar(45) DEFAULT NULL,
+  `SLA` varchar(45) DEFAULT NULL,
+  `PRIORITY` varchar(45) DEFAULT NULL,
+  `PREFIX` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `UI_COMPONENTS`
+--
+
+DROP TABLE IF EXISTS `UI_COMPONENTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `UI_COMPONENTS` (
+  `COMPONENT_ID` int NOT NULL AUTO_INCREMENT,
+  `COMPONENT_NAME` varchar(50) NOT NULL,
+  `PAGE_ID` int DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`COMPONENT_ID`),
+  KEY `foreign_key_1_idx` (`PAGE_ID`),
+  CONSTRAINT `foreign_key_1` FOREIGN KEY (`PAGE_ID`) REFERENCES `ACCESSABLE_PAGES` (`PAGE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UPLOAD_SCHEDULE_MAP`
+--
+
+DROP TABLE IF EXISTS `UPLOAD_SCHEDULE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `UPLOAD_SCHEDULE_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `SCHEDULE_ID` int NOT NULL,
+  `SERVICE_ID` int NOT NULL,
+  `LIST_ID` int NOT NULL,
+  `USER_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL,
+  `SCHEDULER_STATUS` varchar(45) NOT NULL,
+  `LAST_MODIFIED_BY` int DEFAULT NULL,
+  `LAST_MODIFIED_DATE` datetime DEFAULT NULL,
+  `STORE_ID` int DEFAULT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `scheduleIdFK_idx` (`SCHEDULE_ID`),
+  KEY `listFK_idx` (`LIST_ID`),
+  KEY `userIdFk_idx` (`USER_ID`),
+  KEY `store_id_fk_idx` (`STORE_ID`),
+  KEY `userIdFk2_idx` (`LAST_MODIFIED_BY`),
+  CONSTRAINT `listFK` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `scheduleIdFK` FOREIGN KEY (`SCHEDULE_ID`) REFERENCES `SCHEDULAR` (`SCHEDULAR_ID`),
+  CONSTRAINT `store_id_fk` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`),
+  CONSTRAINT `userIdFk` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `userIdFk2` FOREIGN KEY (`LAST_MODIFIED_BY`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `UPLOAD_STATUS`
+--
+
+DROP TABLE IF EXISTS `UPLOAD_STATUS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `UPLOAD_STATUS` (
+  `UPLOAD_ID` int NOT NULL AUTO_INCREMENT,
+  `REFERENCE_ID` int DEFAULT NULL,
+  `LIST_ID` int DEFAULT NULL,
+  `TYPE` int DEFAULT NULL,
+  `STATUS` varchar(50) DEFAULT NULL,
+  `TOTAL_COUNT` int NOT NULL DEFAULT '0',
+  `SUCCESS_COUNT` int NOT NULL DEFAULT '0',
+  `FAILURE_COUNT` int NOT NULL DEFAULT '0',
+  `MODIFIED_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `CREATED_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `REASON_FOR_FAILURE` longtext,
+  `FAILURE_ROW_COUNT` int DEFAULT '0',
+  `USER_ID` int NOT NULL,
+  `UPLOAD_PROCESS_TIME` int DEFAULT '0',
+  `STORE_ID` int DEFAULT NULL,
+  `BUSINESS_HIERARCHY_ID` int DEFAULT NULL,
+  PRIMARY KEY (`UPLOAD_ID`),
+  KEY `FK_sub_list_id` (`LIST_ID`),
+  KEY `FK_App_user_id_idx` (`USER_ID`),
+  KEY `FK_STORE_ID_idx` (`STORE_ID`),
+  KEY `BUSINESS_HIERARCHY_ID` (`BUSINESS_HIERARCHY_ID`),
+  CONSTRAINT `FK_App_user_id` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `FK_STORE_ID` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`),
+  CONSTRAINT `FK_sub_list_id` FOREIGN KEY (`LIST_ID`) REFERENCES `SUB_LIST` (`LIST_ID`),
+  CONSTRAINT `UPLOAD_STATUS_ibfk_1` FOREIGN KEY (`BUSINESS_HIERARCHY_ID`) REFERENCES `BUSINESS_HIERARCHY` (`BUSINESS_HIERARCHY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=301 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `USER_ROLE`
+--
+
+DROP TABLE IF EXISTS `USER_ROLE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USER_ROLE` (
+  `ROLE_ID` int NOT NULL AUTO_INCREMENT,
+  `ROLE_NAME` varchar(45) NOT NULL,
+  PRIMARY KEY (`ROLE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `USER_ROLE_MAP`
+--
+
+DROP TABLE IF EXISTS `USER_ROLE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USER_ROLE_MAP` (
+  `USER_ROLE_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `ROLE_ID` int NOT NULL,
+  `IS_ENABLED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_ROLE_MAP_ID`),
+  UNIQUE KEY `IDX_USER_ROLE_COMPO_UNIQUE` (`USER_ID`,`ROLE_ID`),
+  KEY `fk_USER_ROLE_MAP_USERID_idx` (`USER_ID`),
+  KEY `fk_USER_ROLE_MAP_ROLEID_idx` (`ROLE_ID`),
+  CONSTRAINT `fk_USER_ROLE_MAP_ROLEID` FOREIGN KEY (`ROLE_ID`) REFERENCES `USER_ROLE` (`ROLE_ID`),
+  CONSTRAINT `fk_USER_ROLE_MAP_USERID` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `USER_SECTION_MAP`
+--
+
+DROP TABLE IF EXISTS `USER_SECTION_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USER_SECTION_MAP` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `SECTION_ID` int NOT NULL,
+  `IS_DELETED` tinyint NOT NULL DEFAULT '0',
+  `POSITION` int NOT NULL,
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `ID_UNIQUE` (`ID`),
+  KEY `USER_FK_idx` (`USER_ID`),
+  CONSTRAINT `USER_FK` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `USER_SOCIAL_MEDIA_MAP`
+--
+
+DROP TABLE IF EXISTS `USER_SOCIAL_MEDIA_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USER_SOCIAL_MEDIA_MAP` (
+  `USER_SOCIAL_MEDIA_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `SOCIAL_MEDIA_ID` int NOT NULL,
+  `MEDIA_LINK` varchar(500) DEFAULT NULL,
+  `CREATION_DATE` datetime DEFAULT NULL,
+  `MODIFIED_DATE` datetime DEFAULT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_SOCIAL_MEDIA_MAP_ID`),
+  KEY `fk_SOCIAL_MEDIA_ID_USER_ID_idx` (`USER_ID`),
+  KEY `fk_SOCIAL_MEDIA_ID_SOCIAL_SETTING_ID_idx` (`SOCIAL_MEDIA_ID`),
+  CONSTRAINT `fk_SOCIAL_MEDIA_ID_SOCIAL_SETTING_ID` FOREIGN KEY (`SOCIAL_MEDIA_ID`) REFERENCES `SOCIAL_MEDIA_SETTING` (`SOCIAL_MEDIA_ID`),
+  CONSTRAINT `fk_SOCIAL_MEDIA_ID_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `USER_STORE_MAP`
+--
+
+DROP TABLE IF EXISTS `USER_STORE_MAP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `USER_STORE_MAP` (
+  `USER_STORE_MAP_ID` int NOT NULL AUTO_INCREMENT,
+  `USER_ID` int NOT NULL,
+  `STORE_ID` int NOT NULL,
+  PRIMARY KEY (`USER_STORE_MAP_ID`),
+  KEY `fk_USER_STORE_MAP_1_idx` (`USER_ID`),
+  KEY `fk_USER_STORE_MAP_2_idx` (`STORE_ID`),
+  CONSTRAINT `fk_USER_STORE_MAP_1` FOREIGN KEY (`USER_ID`) REFERENCES `APP_USER` (`USER_ID`),
+  CONSTRAINT `fk_USER_STORE_MAP_2` FOREIGN KEY (`STORE_ID`) REFERENCES `STORE_DETAILS` (`STORE_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `VARIANTS`
+--
+
+DROP TABLE IF EXISTS `VARIANTS`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `VARIANTS` (
+  `VARIANT_ID` int NOT NULL AUTO_INCREMENT,
+  `PROPERTY_NAME` varchar(50) NOT NULL,
+  `BUSINESS_ID` int NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`VARIANT_ID`),
+  KEY `business_variants_idx` (`BUSINESS_ID`),
+  CONSTRAINT `business_variants` FOREIGN KEY (`BUSINESS_ID`) REFERENCES `BUSINESS_DETAILS` (`BUSINESS_DETAIL_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `VARIANT_VALUE`
+--
+
+DROP TABLE IF EXISTS `VARIANT_VALUE`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `VARIANT_VALUE` (
+  `VALUE_ID` int NOT NULL AUTO_INCREMENT,
+  `VARIANT_ID` int NOT NULL,
+  `VARIANT_VALUE` varchar(50) NOT NULL,
+  `IS_DELETED` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`VALUE_ID`),
+  KEY `variant_value_idx` (`VARIANT_ID`),
+  CONSTRAINT `variants_value` FOREIGN KEY (`VARIANT_ID`) REFERENCES `VARIANTS` (`VARIANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-11-16 14:54:09
